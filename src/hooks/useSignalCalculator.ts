@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 // We use useStockQuotes since it's actually in your directory
 import { useStockQuotes } from './useStockQuotes';
 
-export const useSignalCalculator = (signalId: string) => {
+export const useVaultSignalCalculator = (signalId: string) => {
   const { signals, marketRates } = useVaultData();
   const calculatedValue = useMemo(() => {
     const signal = signals.find(s => s.id === signalId);
-    if (!signal || !marketRates || !marketRates[signal.type]) return 0;
+    if (!signal || !marketRates[signal.type]) return 0;
 
     // Core Logic: Weight * Market Multiplier
     return signal.weight * marketRates[signal.type].currentPrice;
@@ -15,7 +15,7 @@ export const useSignalCalculator = (signalId: string) => {
   return calculatedValue;
 };
 
-export const useSignalCalculator = (signalId: string, weight: number, signalType: string) => {
+export const useStockSignalCalculator = (signalId: string, weight: number, signalType: string) => {
   const { quotes } = useStockQuotes();
 
   // Return the computed value DIRECTLY (no useState/useEffect)
@@ -27,5 +27,5 @@ export const useSignalCalculator = (signalId: string, weight: number, signalType
     // Core Logic: Weight * Market Price
     return weight * price;
   }, [quotes, weight, signalType, signalId]);
-};  
+};
 
