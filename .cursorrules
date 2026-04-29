@@ -190,3 +190,37 @@ tree -L 4 -a -I 'node_modules|.git|_pycache|.DS_Store|.pytest_cache|.vscode'
 - Write comments for the code that is not obvious
 - Write comments for the code that is not self-explanatory
 
+# App Surface Design System
+
+## Visual Context
+Canonical visual owner: [Quality and Design System Index](README.md). Use that map for the top-down system view; this page is the narrower detail beneath it.
+
+## Agent Copy Ownership
+The app uses the Hussh / One / Kai / Nav / KYC ontology.
+Rules:
+1. Hussh is the platform and should not speak as a character.
+2. One owns shared shell copy (greetings, empty states).
+3. Kai owns finance copy (portfolio, markets).
+4. Nav owns privacy and consent copy (vault, keys, trust warnings).
+5. KYC owns identity workflow copy.
+6. Local voice/action contracts must set `speaker_persona` to `one`, `kai`, `nav`, or `kyc`.
+
+## Shell Contract
+1. Use `--top-shell-reserved-height` for header clearance.
+2. Page roots own spacing through `padding-top: var(--page-top-start)`.
+3. Canonical container tokens:
+   - --app-shell-reading: 54rem
+   - --app-shell-standard: 90rem
+   - --app-shell-expanded: 96rem
+4. Density: Signed-in app pages default to `compact`.
+5. Widths: Signed-in routes default to `standard`. Use `reading` for details and `expanded` for dashboards.
+6. Route-local inline back buttons are reserved for modals/sheets; others use shared top bar.
+
+## Page Header Contract
+Use `PageHeader` and `SectionHeader` for all headings.
+Rules:
+1. Icon left-aligned, centered against title/eyebrow.
+2. Mobile: Description becomes full-width third row.
+3. Accent divider lines stay constant; no fading to transparent.
+4. Approved route-role accents: `kai`.
+

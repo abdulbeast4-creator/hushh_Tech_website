@@ -7,6 +7,17 @@
 
 :root {
   --font-main: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* App Surface Design System - canonical shell tokens */
+  --app-shell-reading: 54rem;
+  --app-shell-standard: 90rem;
+  --app-shell-expanded: 96rem;
+
+  /* Header clearance for the fixed top shell (ticker shown by default) */
+  --top-shell-reserved-height: 121px;
+
+  /* Page roots should offset content to avoid fixed header overlap */
+  --page-top-start: 121px;
 }
 
 html,
