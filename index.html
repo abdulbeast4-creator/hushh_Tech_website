@@ -5,6 +5,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var storedTheme = localStorage.getItem("theme-preference");
+          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var shouldUseDark = storedTheme ? storedTheme === "dark" : prefersDark;
+          document.documentElement.classList.toggle("dark", shouldUseDark);
+        } catch (_) {
+          // no-op: prevent render blocking from storage/matchMedia issues
+        }
+      })();
+    </script>
     <meta name="google-site-verification" content="NGkmaMm7bqtQ1y8EfcHbYg4DozGnurZ-xeYCJtJ8J0g" />
     <meta name="google-site-verification" content="OKGA8f_h2AxAqs3qyPBc3VW9i3HNktJNtbjxU-YXh4s" />
 

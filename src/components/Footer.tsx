@@ -21,12 +21,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative z-10 bg-[#0B0C10] border-t border-[#1F2937]">
+    <footer className="relative z-10 bg-ios-bg border-t border-ios-card">
       {/* Top Section: Identity & Contact */}
       <div className="px-6 pt-10 pb-6 max-w-7xl mx-auto">
         {/* Brand */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-3 text-white">
+          <div className="flex items-center gap-3 mb-3 text-ios-text-primary">
             {/* Hushh Logo */}
             <img 
               src={HushhLogo} 
@@ -37,22 +37,22 @@ export default function Footer() {
               Hushh 🤫 Technologies LLC
             </h2>
           </div>
-          <p className="text-gray-400 text-base font-medium leading-relaxed max-w-[80%]">
+          <p className="text-ios-text-secondary text-base font-medium leading-relaxed max-w-[80%]">
             1021 5th St W, Kirkland, WA 98033
           </p>
         </div>
 
         {/* Contact Action Panel */}
-        <div className="rounded-xl border border-[#1F2937] bg-[#161d2b] p-5 flex flex-col gap-4 shadow-sm mb-8">
+        <div className="rounded-xl border border-ios-card bg-ios-card p-5 flex flex-col gap-4 shadow-sm mb-8">
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1">
               <a 
                 href="tel:+18884621726" 
-                className="text-white text-lg font-bold leading-tight hover:text-[#135bec] transition-colors flex items-center gap-2"
+                className="text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-lg font-bold leading-tight flex items-center gap-2"
               >
                 (888) 462-1726
               </a>
-              <p className="text-[#9da6b9] text-sm font-normal">
+              <p className="text-ios-text-secondary text-sm font-normal">
                 Mon-Fri: 9AM-6PM PST
               </p>
             </div>
@@ -67,21 +67,21 @@ export default function Footer() {
       <div className="px-6 pb-6 grid gap-8 max-w-7xl mx-auto md:grid-cols-2">
         {/* Quick Links */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-white tracking-wide text-sm uppercase font-bold text-opacity-80">
+          <h3 className="text-ios-text-primary tracking-wide text-sm uppercase font-bold text-opacity-80">
             Quick Links
           </h3>
-          <nav className="flex flex-col gap-0 border-l border-[#1F2937] pl-4">
+          <nav className="flex flex-col gap-0 border-l border-ios-card pl-4">
             <div className="grid grid-cols-2 gap-x-8">
               <div className="space-y-0">
                 <a 
                   href="/about/leadership" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   About Us
                 </a>
                 <a 
                   href="/discover-fund-a" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Fund A
                 </a>
@@ -89,19 +89,19 @@ export default function Footer() {
                   href="https://www.hushh.ai/solutions" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Solutions
                 </a>
                 <a 
                   href="/benefits" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Benefits
                 </a>
                 <a 
                   href="/careers" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Careers
                 </a>
@@ -109,25 +109,25 @@ export default function Footer() {
               <div className="space-y-0">
                 <a 
                   href="/community" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Community
                 </a>
                 <a 
                   href="/faq" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   FAQ
                 </a>
                 <a 
                   href="/contact" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   Contact
                 </a>
                 <a 
                   href="/kyc-verification" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block"
+                  className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group block"
                 >
                   KYC Verification
                 </a>
@@ -138,31 +138,31 @@ export default function Footer() {
 
         {/* Legal Links */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-white tracking-wide text-sm uppercase font-bold text-opacity-80">
+          <h3 className="text-ios-text-primary tracking-wide text-sm uppercase font-bold text-opacity-80">
             Legal
           </h3>
-          <nav className="flex flex-col gap-0 border-l border-[#1F2937] pl-4">
+          <nav className="flex flex-col gap-0 border-l border-ios-card pl-4">
             <a 
               href="/privacy-policy" 
-              className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group"
+              className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group"
             >
               Website Privacy Policy
             </a>
             <a 
               href="/eu-uk-jobs-privacy-policy" 
-              className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group"
+              className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group"
             >
               EU and UK Privacy Policies
             </a>
             <a 
               href="/california-privacy-policy" 
-              className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group"
+              className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group"
             >
               California Privacy Policy
             </a>
             <a 
               href="/carrer-privacy-policy" 
-              className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group"
+              className="py-2 text-ios-text-secondary hover:text-ios-text-primary transition-all duration-200 ease-ios text-base font-medium flex items-center justify-between group"
             >
               Careers Site Privacy Notice
             </a>
@@ -171,7 +171,7 @@ export default function Footer() {
       </div>
 
       {/* Divider */}
-      <div className="w-full h-px bg-[#1F2937]"></div>
+      <div className="w-full h-px bg-ios-card"></div>
 
       {/* Bottom Section: Regulatory & Social */}
       <div className="px-6 pt-8 pb-12 max-w-7xl mx-auto">
@@ -181,33 +181,33 @@ export default function Footer() {
             href="https://www.hushh.ai" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="w-10 h-10 rounded-full bg-[#1F2937] flex items-center justify-center hover:bg-[#135bec] transition-colors group"
+            className="w-10 h-10 rounded-full bg-ios-card flex items-center justify-center transition-all duration-200 ease-ios group hover:bg-ios-bg"
           >
-            <FaGlobe className="text-gray-400 group-hover:text-white text-[16px]" />
+            <FaGlobe className="text-ios-text-secondary group-hover:text-ios-text-primary text-[16px] transition-all duration-200 ease-ios" />
           </a>
           <a 
             href="mailto:support@hushh.ai" 
-            className="w-10 h-10 rounded-full bg-[#1F2937] flex items-center justify-center hover:bg-[#135bec] transition-colors group"
+            className="w-10 h-10 rounded-full bg-ios-card flex items-center justify-center transition-all duration-200 ease-ios group hover:bg-ios-bg"
           >
-            <FaAt className="text-gray-400 group-hover:text-white text-[16px]" />
+            <FaAt className="text-ios-text-secondary group-hover:text-ios-text-primary text-[16px] transition-all duration-200 ease-ios" />
           </a>
           <a 
             href="/community" 
-            className="w-10 h-10 rounded-full bg-[#1F2937] flex items-center justify-center hover:bg-[#135bec] transition-colors group"
+            className="w-10 h-10 rounded-full bg-ios-card flex items-center justify-center transition-all duration-200 ease-ios group hover:bg-ios-bg"
           >
-            <FaRss className="text-gray-400 group-hover:text-white text-[16px]" />
+            <FaRss className="text-ios-text-secondary group-hover:text-ios-text-primary text-[16px] transition-all duration-200 ease-ios" />
           </a>
         </div>
 
         {/* Copyright */}
-        <p className="text-gray-400 text-sm font-normal mb-4">
+        <p className="text-ios-text-secondary text-sm font-normal mb-4">
           © 2025 Hushh All Rights Reserved.
         </p>
 
         {/* Disclaimer */}
-        <div className="p-4 rounded-xl bg-[#161d2b]/50 border border-[#1F2937]/50">
-          <p className="text-gray-500 text-xs leading-5">
-            <span className="font-bold text-gray-400">Disclaimer:</span> Investment involves risk, including the possible loss of principal. Past performance does not guarantee future results. Please consult with a financial advisor before making investment decisions.
+        <div className="p-4 rounded-xl bg-ios-card border border-ios-card">
+          <p className="text-ios-text-secondary text-xs leading-5">
+            <span className="font-bold text-ios-text-primary">Disclaimer:</span> Investment involves risk, including the possible loss of principal. Past performance does not guarantee future results. Please consult with a financial advisor before making investment decisions.
           </p>
         </div>
       </div>

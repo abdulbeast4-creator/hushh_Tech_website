@@ -9,6 +9,11 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import { useStockQuotes, StockQuote, STOCK_LOGOS } from "../hooks/useStockQuotes";
 import config from "../resources/config/config";
 import { useAuthSession } from "../auth/AuthSessionProvider";
+import {
+  applyDarkModeClass,
+  persistThemePreference,
+  resolveInitialDarkMode,
+} from "../utils/themePreference";
 
 const WELCOME_TOAST_PENDING_KEY = "showWelcomeToast";
 const WELCOME_TOAST_USER_KEY = "showWelcomeToastUserId";
@@ -16,7 +21,7 @@ const WELCOME_TOAST_USER_KEY = "showWelcomeToastUserId";
 // Chip-based ticker component - Light theme design
 const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boolean }) => {
   return (
-    <div className="group flex h-10 shrink-0 items-center gap-2 rounded-full bg-white border border-gray-200 shadow-sm pl-2 pr-3.5 hover:shadow-md transition-all">
+    <div className="group flex h-10 shrink-0 items-center gap-2 rounded-full border border-ios-card bg-ios-card pl-2 pr-3.5 shadow-sm transition-all duration-200 ease-ios hover:shadow-md">
       {/* Logo in gray circle */}
       <div className="flex w-7 h-7 items-center justify-center rounded-full bg-gray-100 shrink-0 overflow-hidden">
         {quote.logo ? (
@@ -29,11 +34,11 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
             }}
           />
         ) : (
-          <span className="text-[10px] font-bold text-gray-600">{quote.displaySymbol.charAt(0)}</span>
+          <span className="text-[10px] font-bold text-ios-text-secondary">{quote.displaySymbol.charAt(0)}</span>
         )}
       </div>
       {/* Stock symbol - use displaySymbol for cleaner display */}
-      <span className="text-[12px] font-bold text-gray-800 leading-none">{quote.displaySymbol}</span>
+      <span className="text-[12px] font-bold leading-none text-ios-text-primary">{quote.displaySymbol}</span>
       {/* Percent change with arrow */}
       <div className={`ml-0.5 flex items-center gap-0.5 ${quote.isUp ? 'text-green-600' : 'text-red-500'}`}>
         <span className="text-[10px]">{quote.isUp ? '▲' : '▼'}</span>
@@ -48,6 +53,14 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
 export default function Navbar() {
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return resolveInitialDarkMode(
+      localStorage,
+      document.documentElement,
+      window.matchMedia.bind(window)
+    );
+  });
   const [toastShown, setToastShown] = useState(false);
   const previousUserIdRef = useRef<string | null>(null);
   const [careerDropdownOpen, setCareerDropdownOpen] = useState(false);
@@ -85,6 +98,11 @@ export default function Navbar() {
       previousUserIdRef.current = currentUserId;
     }
   }, [user?.id]);
+
+  useEffect(() => {
+    applyDarkModeClass(document.documentElement, isDarkMode);
+    persistThemePreference(localStorage, isDarkMode);
+  }, [isDarkMode]);
 
   const handleLogout = async () => {
     await signOut();
@@ -209,12 +227,15 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Fixed Header with Navigation + Ticker - Light Theme */}
-      <header className="fixed w-full z-[999] top-0">
-        {/* Main Navigation Bar - Soft Light Background */}
-        <nav className="flex w-full items-center justify-between bg-[#F8F9FA] px-4 lg:px-8 h-16 border-b border-gray-200 transition-colors duration-300">
+      {/* Fixed Header with Navigation + Ticker - Dynamic Island style */}
+      <header className="fixed inset-x-0 top-0 z-[999] flex flex-col items-center">
+        {/* Main Navigation Bar - Centered pill shell */}
+        <nav className="ios-glass mt-3 flex h-16 w-[min(96%,90rem)] items-center justify-between rounded-pill border border-ios-card px-4 transition-colors duration-300 lg:px-8">
           {/* Left: Brand Lockup */}
-          <Link to="/" className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="flex items-center gap-3 text-ios-text-primary transition-all duration-200 ease-ios active:scale-95"
+          >
             {/* Hushh Logo Image in Circle with subtle gradient */}
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200/50 shadow-sm shrink-0 overflow-hidden">
               <Image 
@@ -225,8 +246,8 @@ export default function Navbar() {
             </div>
             {/* Brand Text - Stacked Layout */}
             <div className="flex flex-col">
-              <h1 className="text-[18px] font-bold leading-none tracking-tight text-gray-900">Hushh</h1>
-              <span className="text-[13px] text-gray-500 font-medium mt-0.5">Technologies</span>
+              <h1 className="text-[18px] font-bold leading-none tracking-tight text-ios-text-primary">Hushh</h1>
+              <span className="mt-0.5 text-[13px] font-medium text-ios-text-secondary">Technologies</span>
             </div>
           </Link>
 
@@ -238,10 +259,10 @@ export default function Navbar() {
                 <button
                   key={path}
                   onClick={() => handleLinkClick(path)}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ease-ios active:scale-95 ${
                     active
-                      ? 'bg-[#2F80ED]/10 text-[#1f6cc7]'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-[#2F80ED]/10 text-ios-text-primary'
+                      : 'text-ios-text-primary hover:text-ios-text-secondary'
                   }`}
                 >
                   {label}
@@ -258,17 +279,26 @@ export default function Navbar() {
             {/* Desktop Utility Actions */}
             {isDesktop && (
               <>
+                <button
+                  onClick={() => setIsDarkMode((prev) => !prev)}
+                  className="inline-flex items-center justify-center rounded-full border border-ios-card bg-ios-card px-3 py-2 text-sm font-semibold text-ios-text-primary transition-all duration-200 ease-ios hover:text-ios-text-secondary active:scale-95"
+                  aria-label={t("nav.darkMode", "Dark Mode")}
+                  aria-pressed={isDarkMode}
+                  title={t("nav.darkMode", "Dark Mode")}
+                >
+                  {isDarkMode ? t("common.light", "Light") : t("common.dark", "Dark")}
+                </button>
                 {isAuthenticated ? (
                   <>
                     <button
                       onClick={() => navigate('/hushh-user-profile')}
-                      className="hidden xl:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="hidden xl:inline-flex items-center justify-center rounded-full border border-ios-card px-4 py-2 text-sm font-semibold text-ios-text-primary transition-all duration-200 ease-ios hover:text-ios-text-secondary active:scale-95"
                     >
                       {t('nav.viewProfile')}
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f6cc7] transition-colors"
+                      className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 ease-ios hover:bg-[#1f6cc7] active:scale-95"
                     >
                       {t('nav.logout')}
                     </button>
@@ -276,7 +306,7 @@ export default function Navbar() {
                 ) : (
                   <button
                     onClick={() => navigate('/Login')}
-                    className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f6cc7] transition-colors"
+                    className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 ease-ios hover:bg-[#1f6cc7] active:scale-95"
                   >
                     {t('nav.login')}
                   </button>
@@ -288,7 +318,7 @@ export default function Navbar() {
             {!isDesktop && (
               <button
                 onClick={toggleDrawer}
-                className="flex items-center justify-center w-11 h-11 rounded-full bg-[#2F80ED] text-white active:scale-95 transition-transform shadow-lg shadow-blue-500/30 hover:bg-blue-600"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F80ED] text-white shadow-lg shadow-blue-500/30 transition-all duration-200 ease-ios hover:bg-blue-600 active:scale-95"
                 aria-label="Toggle menu"
               >
                 <FiMenu className="w-5 h-5" />
@@ -299,7 +329,7 @@ export default function Navbar() {
 
         {/* Chip-based Ticker Strip - BELOW Navigation (hidden on onboarding & profile pages) */}
         {!hideTicker && (
-        <section className="relative w-full bg-[#F8F9FA] py-2.5 border-b border-gray-200">
+        <section className="relative w-full border-b border-ios-card bg-ios-bg py-2.5">
           {/* Ticker Marquee with Fade Mask */}
           <div className="ticker-mask relative flex w-full overflow-hidden">
             <div className="ticker-track flex items-center gap-3 px-4">
@@ -326,7 +356,7 @@ export default function Navbar() {
           {lastUpdated && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-[9px] font-medium text-gray-500">
+              <span className="text-[9px] font-medium text-ios-text-secondary">
                 {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
@@ -366,7 +396,7 @@ export default function Navbar() {
               </div>
 
               {/* Section 1: Primary Navigation */}
-              <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
+              <div className="bg-ios-card rounded-[10px] overflow-hidden mb-5 shadow-sm">
                 {[
                   { path: "/", label: t('nav.home'), icon: "home", bg: "#007AFF" },
                   { path: "/about/leadership", label: t('nav.ourPhilosophy'), icon: "menu_book", bg: "#34C759" },
@@ -400,7 +430,7 @@ export default function Navbar() {
               </div>
 
               {/* Section 2: Contact & FAQ */}
-              <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
+              <div className="bg-ios-card rounded-[10px] overflow-hidden mb-5 shadow-sm">
                 {[
                   { path: "/contact", label: t('nav.contact'), icon: "mail", bg: "#8E8E93" },
                   { path: "/faq", label: t('nav.faq'), icon: "help", bg: "#FF9500" },
@@ -534,6 +564,33 @@ export default function Navbar() {
                   </button>
                 </div>
               )}
+
+              {/* Section 5: Theme */}
+              <div className="bg-ios-card rounded-[10px] overflow-hidden mb-5 shadow-sm">
+                <button
+                  onClick={() => setIsDarkMode((prev) => !prev)}
+                  className="flex w-full min-h-[44px] items-center bg-ios-card py-2.5 pl-4 pr-4 text-ios-text-primary transition-colors active:bg-ios-bg"
+                  aria-label={t("nav.darkMode", "Dark Mode")}
+                  aria-pressed={isDarkMode}
+                  role="switch"
+                  aria-checked={isDarkMode}
+                >
+                  <span className="flex-grow text-left text-[17px] leading-none">
+                    {t("nav.darkMode", "Dark Mode")}
+                  </span>
+                  <span
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 ease-ios ${
+                      isDarkMode ? "bg-[#34C759]" : "bg-ios-bg"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ease-ios ${
+                        isDarkMode ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </span>
+                </button>
+              </div>
 
               {/* Spacer to push logout to bottom */}
               <div className="flex-grow" />

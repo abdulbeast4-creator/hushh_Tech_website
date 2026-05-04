@@ -7,6 +7,30 @@
 
 :root {
   --font-main: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ios-bg: #F2F2F7;
+  --ios-card: #FFFFFF;
+  --ios-text-primary: #000000;
+  --ios-text-secondary: #636366;
+  --glass-bg-rgb: 255, 255, 255;
+  --glass-border-rgb: 255, 255, 255;
+  --radius-squircle: 24px;
+  --radius-pill: 9999px;
+}
+
+.dark {
+  --ios-bg: #000000;
+  --ios-card: #1C1C1E;
+  --ios-text-primary: #FFFFFF;
+  --ios-text-secondary: #8E8E93;
+  --glass-bg-rgb: 28, 28, 30;
+  --glass-border-rgb: 28, 28, 30;
+}
+
+.ios-glass {
+  background: rgba(var(--glass-bg-rgb), 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(var(--glass-border-rgb), 0.3);
 }
 
 html,
