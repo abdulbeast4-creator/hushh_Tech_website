@@ -11,6 +11,7 @@
     "security:audit": "bash scripts/security/open-source-audit.sh",
     "security:pre-commit": "PRE_COMMIT_HOME=.pre-commit-cache pre-commit run --all-files",
     "security:rewrite-history": "bash scripts/security/rewrite-history.sh",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
