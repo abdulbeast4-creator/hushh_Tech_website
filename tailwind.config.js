@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -15,7 +16,17 @@ export default {
         "ios-pink": "#FF2D55",            // iOS System Pink — music, photos accent
         "ios-gray-bg": "#F5F5F7",         // Athens Gray — card backgrounds
         "ios-dark": "#1D1D1F",            // Shark — dark surfaces, Fund A card
+        "ios-bg": "var(--ios-bg)",
+        "ios-card": "var(--ios-card)",
+        "ios-text-primary": "var(--ios-text-primary)",
+        "ios-text-secondary": "var(--ios-text-secondary)",
         "hushh-text-muted": "#6B7280",
+      },
+      borderRadius: {
+        squircle: "24px",
+      },
+      transitionTimingFunction: {
+        ios: "cubic-bezier(0.4, 0, 0.2, 1)",
       },
       fontFamily: {
         display: ['"Playfair Display"', 'serif'],

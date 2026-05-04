@@ -7,6 +7,14 @@
 
 :root {
   --font-main: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ios-bg: #F2F2F7;
+  --ios-card: #FFFFFF;
+  --ios-text-primary: #000000;
+  --ios-text-secondary: #636366;
+  --glass-bg-rgb: 255, 255, 255;
+  --glass-border-rgb: 255, 255, 255;
+  --radius-squircle: 24px;
+  --radius-pill: 9999px;
 }
 
 html,
@@ -86,6 +94,23 @@ body {
   background: linear-gradient(to right, #7a7a7e, #ffffff);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.ios-glass {
+  background: rgba(var(--glass-bg-rgb), 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(var(--glass-border-rgb), 0.3);
+}
+
+/* WARNING: The RGB values for --glass-bg-rgb (28, 28, 30) must be manually kept in sync with the hex value of --ios-card (#1C1C1E) to ensure visual consistency of the glassmorphism effect in Dark Mode. */
+.dark {
+  --ios-bg: #000000;
+  --ios-card: #1C1C1E;
+  --ios-text-primary: #FFFFFF;
+  --ios-text-secondary: #8E8E93;
+  --glass-bg-rgb: 28, 28, 30;
+  --glass-border-rgb: 28, 28, 30;
 }
 
 .color-gradient-bg {
