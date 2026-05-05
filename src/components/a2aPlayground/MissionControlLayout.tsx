@@ -139,7 +139,6 @@ export const MissionControlLayout: React.FC<MissionControlLayoutProps> = ({
               />
             </VStack>
           </GridItem>
-        )}
 
         {/* Center Pane - Terminal Messages */}
         <GridItem>
