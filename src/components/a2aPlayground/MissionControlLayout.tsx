@@ -73,19 +73,17 @@ export const MissionControlLayout: React.FC<MissionControlLayoutProps> = ({
   return (
     <Box
       minH="100vh"
-      bg="gray.900"
+      className="bento-shell"
+      bg="linear-gradient(180deg, #090909 0%, #120B1F 100%)"
       color="white"
-      p={{ base: 2, md: 4 }}
+      p={{ base: 3, md: 5 }}
     >
       {/* Header */}
       <HStack
         justify="space-between"
         mb={4}
         p={4}
-        bg="blackAlpha.600"
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="gray.700"
+        className="ios-glass bento-header"
       >
         <HStack spacing={4}>
           <Heading size="md" fontFamily="mono" color="green.400">
@@ -103,31 +101,30 @@ export const MissionControlLayout: React.FC<MissionControlLayoutProps> = ({
 
       {/* Main 3-pane layout */}
       <Grid
-        templateColumns={{ base: '1fr', lg: '280px 1fr 320px' }}
-        gap={4}
-        h={{ base: 'auto', lg: 'calc(100vh - 140px)' }}
+        className="bento-grid"
+        templateColumns={{ base: '1fr', lg: 'repeat(3, minmax(0, 1fr))' }}
+        gap={{ base: 4, lg: 6 }}
+        autoRows="minmax(0, 1fr)"
       >
         {/* Left Pane - Agent Network */}
-        {!isMobile && (
-          <GridItem>
-            <VStack
-              h="full"
-              bg="blackAlpha.600"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="gray.700"
-              p={4}
-              spacing={4}
-              align="stretch"
+        <GridItem>
+          <VStack
+            className="bento-card ios-card"
+            h="full"
+            p={4}
+            spacing={4}
+            align="stretch"
+            position="relative"
+          >
+            <TransparencyBadge label="TRANSPARENCY" />
+            <Text
+              fontSize="xs"
+              color="gray.400"
+              textTransform="uppercase"
+              letterSpacing="widest"
             >
-              <Text
-                fontSize="xs"
-                color="gray.400"
-                textTransform="uppercase"
-                letterSpacing="widest"
-              >
-                🌐 Agent Network
-              </Text>
+              🌐 Agent Network
+            </Text>
               
               <AgentNetworkVisualization agents={agents} />
               
@@ -147,14 +144,13 @@ export const MissionControlLayout: React.FC<MissionControlLayoutProps> = ({
         {/* Center Pane - Terminal Messages */}
         <GridItem>
           <VStack
+            className="bento-card ios-card"
             h="full"
-            bg="black"
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.700"
             overflow="hidden"
             spacing={0}
+            position="relative"
           >
+            <TransparencyBadge label="USER CONTROL" />
             {/* Terminal header */}
             <HStack
               w="full"
@@ -236,16 +232,15 @@ export const MissionControlLayout: React.FC<MissionControlLayoutProps> = ({
         {/* Right Pane - Live State */}
         <GridItem>
           <VStack
+            className="bento-card ios-card"
             h="full"
-            bg="blackAlpha.600"
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.700"
             p={4}
             spacing={4}
             align="stretch"
             overflowY="auto"
+            position="relative"
           >
+            <TransparencyBadge label="PRIVACY FIRST" />
             <Text
               fontSize="xs"
               color="gray.400"
@@ -389,6 +384,26 @@ const AgentNode: React.FC<{
       {status.toUpperCase()}
     </Badge>
   </VStack>
+);
+
+const TransparencyBadge: React.FC<{ label?: string }> = ({ label = 'TRANSPARENCY MODE' }) => (
+  <Box
+    position="absolute"
+    top="1rem"
+    right="1rem"
+    px={2}
+    py={1}
+    borderRadius="full"
+    fontSize="10px"
+    fontWeight="semibold"
+    letterSpacing="0.12em"
+    textTransform="uppercase"
+    color="white"
+    bg="rgba(255,255,255,0.16)"
+    className="transparency-badge"
+  >
+    {label}
+  </Box>
 );
 
 /**
