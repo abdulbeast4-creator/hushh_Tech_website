@@ -136,13 +136,10 @@ function PublicHushhProfilePage() {
     : null;
 
   const handlePrivacyToggleChange = () => {
-    setIsPrivacyModeEnabled((prev) => {
-      const next = !prev;
-      if (typeof window !== "undefined" && typeof window.navigator?.vibrate === "function") {
-        window.navigator.vibrate(10);
-      }
-      return next;
-    });
+    if (typeof window !== "undefined" && typeof window.navigator?.vibrate === "function") {
+      window.navigator.vibrate(10);
+    }
+    setIsPrivacyModeEnabled((prev) => !prev);
   };
 
   return (
