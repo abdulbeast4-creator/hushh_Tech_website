@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import services from "../../services/services";
 import { UserPreferenceProfile } from "../../types/preferences";
+import DataVitalTracker from "../../components/dashboard/DataVitalTracker";
+import {
+  PrivacySettingsProvider,
+  usePrivacySettingsContext,
+} from "../../context/PrivacySettingsContext";
+import { trackEvent } from "../../utils/trackEvent";
 
 interface PublicUserDetails {
   name: string;
@@ -61,6 +67,81 @@ function formatBudget(budget?: { currency: string; min: number | null; max: numb
   return `${budget.currency} ${min} - ${max}`;
 }
 
+function DashboardContainer() {
+  const { isPrivacyModeEnabled, setIsPrivacyModeEnabled } = usePrivacySettingsContext();
+  const didMountRef = useRef(false);
+  const [userMetrics] = useState({
+    height: 165,
+    weight: 76,
+    unit: "metric" as const,
+  });
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+
+    if (typeof window !== "undefined" && typeof window.navigator?.vibrate === "function") {
+      window.navigator.vibrate(10);
+    }
+    trackEvent("haptic_privacy_toggle", { enabled: isPrivacyModeEnabled });
+  }, [isPrivacyModeEnabled]);
+
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-3 lg:max-w-md">
+      {/* DCO Sign-off: Signed-off-by: Cursor Agent <cursor-agent@local> */}
+      <div
+        className="rounded-2xl border p-3"
+        style={{
+          background: "var(--ios-glass)",
+          borderColor: "var(--ios-background)",
+          color: "var(--ios-text-primary)",
+        }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span aria-hidden="true">{isPrivacyModeEnabled ? "🔒" : "🔓"}</span>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold uppercase tracking-wide">Data Privacy Mode</span>
+              <span className="text-xs opacity-80">
+                {isPrivacyModeEnabled ? "Shielding sensitive details" : "Standard visibility"}
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isPrivacyModeEnabled}
+            onClick={() => setIsPrivacyModeEnabled((prev) => !prev)}
+            className="relative inline-flex h-8 w-14 items-center rounded-full p-1"
+            style={{ background: "var(--ios-background)" }}
+          >
+            <motion.span
+              className="block h-6 w-6 rounded-full"
+              style={{ background: "var(--ios-text-primary)" }}
+              animate={{
+                x: isPrivacyModeEnabled ? 24 : 0,
+                scaleX: [1, 1.2, 1],
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30,
+              }}
+            />
+          </button>
+        </div>
+      </div>
+
+      <DataVitalTracker
+        userMetrics={userMetrics}
+        isPrivacyModeEnabled={isPrivacyModeEnabled}
+      />
+    </div>
+  );
+}
+
 function PublicHushhProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -69,7 +150,6 @@ function PublicHushhProfilePage() {
   const [user, setUser] = useState<PublicUserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isPrivacyModeEnabled, setIsPrivacyModeEnabled] = useState(false);
 
   useEffect(() => {
     const hydrate = async () => {
@@ -135,13 +215,6 @@ function PublicHushhProfilePage() {
     ? new Date(preferences.lastEnrichedAt).toLocaleString()
     : null;
 
-  const handlePrivacyToggleChange = () => {
-    if (typeof window !== "undefined" && typeof window.navigator?.vibrate === "function") {
-      window.navigator.vibrate(10);
-    }
-    setIsPrivacyModeEnabled((prev) => !prev);
-  };
-
   return (
     <div className="min-h-screen py-10 md:py-16" style={{ background: "var(--ios-background)" }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 space-y-8">
@@ -182,48 +255,9 @@ function PublicHushhProfilePage() {
             </div>
             
             <div className="flex flex-col gap-3 items-start lg:items-end">
-              {/* DCO Sign-off: Signed-off-by: Cursor Agent <cursor-agent@local> */}
-              <div
-                className="w-full max-w-xs rounded-2xl border p-3"
-                style={{
-                  background: "var(--ios-glass)",
-                  borderColor: "var(--ios-background)",
-                }}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span aria-hidden="true">{isPrivacyModeEnabled ? "🔒" : "🔓"}</span>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold uppercase tracking-wide">Data Privacy Mode</span>
-                      <span className="text-xs opacity-80">
-                        {isPrivacyModeEnabled ? "Shielding sensitive details" : "Standard visibility"}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={isPrivacyModeEnabled}
-                    onClick={handlePrivacyToggleChange}
-                    className="relative inline-flex h-8 w-14 items-center rounded-full p-1"
-                    style={{ background: "var(--ios-background)" }}
-                  >
-                    <motion.span
-                      className="block h-6 w-6 rounded-full"
-                      style={{ background: "var(--ios-text-primary)" }}
-                      animate={{
-                        x: isPrivacyModeEnabled ? 24 : 0,
-                        scaleX: isPrivacyModeEnabled ? [1, 1.2, 1] : [1, 1.2, 1],
-                      }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
-                    />
-                  </button>
-                </div>
-              </div>
+              <PrivacySettingsProvider>
+                <DashboardContainer />
+              </PrivacySettingsProvider>
               {lastUpdated && (
                 <div className="flex flex-col gap-1 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-xl border border-gray-200 shadow-sm">
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">Last Synced</span>
