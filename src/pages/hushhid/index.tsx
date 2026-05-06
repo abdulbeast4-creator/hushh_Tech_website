@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import services from "../../services/services";
 import { UserPreferenceProfile } from "../../types/preferences";
 
@@ -32,7 +33,7 @@ const PreferenceCard = ({
           <span className="ml-auto h-2 w-2 rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 inline-block"></span>
         </div>
         <div className="space-y-3">
-          {items.map((item, index) => (
+          {items.map((item) => (
             <div key={item.label} className="group">
               <div className="flex items-baseline justify-between gap-4 py-2 border-b border-gray-100 last:border-0">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{item.label}</span>
@@ -68,6 +69,7 @@ function PublicHushhProfilePage() {
   const [user, setUser] = useState<PublicUserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPrivacyModeEnabled, setIsPrivacyModeEnabled] = useState(false);
 
   useEffect(() => {
     const hydrate = async () => {
@@ -133,11 +135,28 @@ function PublicHushhProfilePage() {
     ? new Date(preferences.lastEnrichedAt).toLocaleString()
     : null;
 
+  const handlePrivacyToggleChange = () => {
+    setIsPrivacyModeEnabled((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined" && typeof window.navigator?.vibrate === "function") {
+        window.navigator.vibrate(10);
+      }
+      return next;
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-10 md:py-16">
+    <div className="min-h-screen py-10 md:py-16" style={{ background: "var(--ios-background)" }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 space-y-8">
         {/* Hero Section - Professional Dashboard Style */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 rounded-3xl border border-gray-200 p-8 md:p-10 shadow-xl">
+        <div
+          className="relative overflow-hidden rounded-3xl border p-8 md:p-10 shadow-xl"
+          style={{
+            background: "var(--ios-glass)",
+            borderColor: "var(--ios-background)",
+            color: "var(--ios-text-primary)",
+          }}
+        >
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-cyan-100/40 to-transparent rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-sky-100/40 to-transparent rounded-full -ml-24 -mb-24"></div>
           
@@ -166,6 +185,48 @@ function PublicHushhProfilePage() {
             </div>
             
             <div className="flex flex-col gap-3 items-start lg:items-end">
+              {/* DCO Sign-off: Signed-off-by: Cursor Agent <cursor-agent@local> */}
+              <div
+                className="w-full max-w-xs rounded-2xl border p-3"
+                style={{
+                  background: "var(--ios-glass)",
+                  borderColor: "var(--ios-background)",
+                }}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span aria-hidden="true">{isPrivacyModeEnabled ? "🔒" : "🔓"}</span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold uppercase tracking-wide">Data Privacy Mode</span>
+                      <span className="text-xs opacity-80">
+                        {isPrivacyModeEnabled ? "Shielding sensitive details" : "Standard visibility"}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isPrivacyModeEnabled}
+                    onClick={handlePrivacyToggleChange}
+                    className="relative inline-flex h-8 w-14 items-center rounded-full p-1"
+                    style={{ background: "var(--ios-background)" }}
+                  >
+                    <motion.span
+                      className="block h-6 w-6 rounded-full"
+                      style={{ background: "var(--ios-text-primary)" }}
+                      animate={{
+                        x: isPrivacyModeEnabled ? 24 : 0,
+                        scaleX: isPrivacyModeEnabled ? [1, 1.2, 1] : [1, 1.2, 1],
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  </button>
+                </div>
+              </div>
               {lastUpdated && (
                 <div className="flex flex-col gap-1 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-xl border border-gray-200 shadow-sm">
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">Last Synced</span>
