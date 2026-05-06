@@ -78,6 +78,7 @@ import { AuthSessionProvider, useAuthSession } from './auth/AuthSessionProvider'
 import AuthRequiredRoute from './components/AuthRequiredRoute';
 import HushhHackathonPage from './pages/hushh-hackathon/ui';
 import MetricsPage from './pages/metrics';
+import Dashboard from './routes/Dashboard';
 
 const KaiIndiaApp = React.lazy(() => import('./kai-india/pages'));
 
@@ -108,9 +109,10 @@ const ContentWrapper = ({ children }: { children: ReactNode }) => {
   const isProfile = location.pathname === '/profile';
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
+  const isDashboard = location.pathname === '/dashboard';
 
   return (
-    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isKycFlow || isKycDemo || isA2APlayground || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isProfile || isHushhHackathon || isMetrics ? '' : 'mt-20'}`}>
+    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isKycFlow || isKycDemo || isA2APlayground || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isProfile || isHushhHackathon || isMetrics || isDashboard ? '' : 'mt-20'}`}>
       {children}
     </div>
   );
@@ -141,7 +143,8 @@ const useLayoutVisibility = () => {
   const isPublicInvestorProfile = location.pathname.startsWith('/investor/');
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
-  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isSignNda || isDocumentViewer || isHushhUserProfile || isKycFlow || isKycDemo || isA2APlayground || isPublicInvestorProfile || isHushhHackathon || isMetrics;
+  const isDashboard = location.pathname === '/dashboard';
+  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isSignNda || isDocumentViewer || isHushhUserProfile || isKycFlow || isKycDemo || isA2APlayground || isPublicInvestorProfile || isHushhHackathon || isMetrics || isDashboard;
   return {
     showNavbar: !hideOld,
     showFooter: !hideOld,
@@ -356,6 +359,7 @@ function App() {
             <Route path='/a2a-playground' element={<A2APlaygroundPage />} />
             <Route path='/receipt-generator' element={<ReceiptGeneratorPage />} />
             <Route path='/developer-docs' element={<DeveloperDocsPage />} />
+            <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/metrics' element={<MetricsPage />} />
             <Route path='/metric' element={<Navigate to='/metrics' replace />} />
             <Route path='/hushh-ai' element={<HushhAIPage />} />
