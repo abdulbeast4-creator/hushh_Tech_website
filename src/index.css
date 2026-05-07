@@ -12,6 +12,10 @@
   --ios-card: #ffffff;
   --ios-text-primary: #000000;
   --ios-text-secondary: #636366;
+
+  /* Shell Contract: header clearance token */
+  --top-shell-reserved-height: 121px;
+  --page-top-start: var(--top-shell-reserved-height);
 }
 
 .dark {
@@ -20,6 +24,10 @@
   --ios-card: #1c1c1e;
   --ios-text-primary: #ffffff;
   --ios-text-secondary: #8e8e93;
+
+  /* Keep header clearance consistent across themes */
+  --top-shell-reserved-height: 121px;
+  --page-top-start: var(--top-shell-reserved-height);
 }
 
 html,
