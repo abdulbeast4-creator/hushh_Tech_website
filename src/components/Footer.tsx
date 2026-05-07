@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaGlobe, FaAt, FaRss, FaPhone } from "react-icons/fa";
 import HushhLogo from "./images/Hushhogo.png";
 import { useAuthSession } from "../auth/AuthSessionProvider";
+import PrivacyHUD from "./ui/PrivacyHUD";
 
 export default function Footer() {
   const { status } = useAuthSession();
@@ -175,6 +176,9 @@ export default function Footer() {
 
       {/* Bottom Section: Regulatory & Social */}
       <div className="px-6 pt-8 pb-12 max-w-7xl mx-auto">
+        <div className="mb-6 flex justify-end">
+          <PrivacyHUD />
+        </div>
         {/* Social Media */}
         <div className="flex gap-4 mb-8">
           <a 
