@@ -141,8 +141,8 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
       </header>
 
       {/* Spacer — prevents content from hiding behind the fixed header */}
-      {/* Nav bar ~72px + ticker strip ~49px = ~121px when ticker shown */}
-      <div className={showTicker ? "h-[121px]" : "h-[72px]"} />
+      {/* Use shared Shell Contract token for header clearance */}
+      <div className={showTicker ? "h-[var(--top-shell-reserved-height)]" : "h-[72px]"} />
 
       {/* Navigation Drawer */}
       <HushhTechNavDrawer
