@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, ShieldOff, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -8,11 +8,21 @@ export interface PrivacyShieldProps {
   phone: string;
 }
 
-interface FieldRowProps {
-  label: string;
+interface ToggleSwitchProps {
+  id: string;
+  checked: boolean;
+  onChange: () => void;
+  /** Descriptive label read by screen readers, e.g. "Toggle email address visibility" */
+  ariaLabel: string;
+}
+
+interface VisibilityRowProps {
+  id: string;
+  fieldLabel: string;
   value: string;
-  visible: boolean;
   masked: string;
+  visible: boolean;
+  onToggle: () => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -24,112 +34,125 @@ const maskEmail = (email: string): string => {
 };
 
 const maskPhone = (phone: string): string =>
-  `${'•'.repeat(Math.min(phone.replace(/\D/g, '').length, 10))}`;
+  '•'.repeat(Math.min(phone.replace(/\D/g, '').length, 10));
 
 // ─── Toggle Switch ─────────────────────────────────────────────────────────────
-
-interface ToggleSwitchProps {
-  id: string;
-  checked: boolean;
-  onChange: () => void;
-  ariaLabel: string;
-}
+// Uses role="switch" (ARIA spec for binary on/off controls) with aria-checked
+// so screen readers announce "on" / "off" rather than "checked" / "unchecked".
+// The sr-only input is naturally Tab-focusable; peer-focus-visible shows a ring.
 
 const ToggleSwitch = ({ id, checked, onChange, ariaLabel }: ToggleSwitchProps) => (
-  <label htmlFor={id} className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+  <label
+    htmlFor={id}
+    className="relative inline-flex items-center cursor-pointer flex-shrink-0"
+  >
     <input
       id={id}
       type="checkbox"
+      role="switch"
+      aria-checked={checked}
+      aria-label={ariaLabel}
       className="sr-only peer"
       checked={checked}
       onChange={onChange}
-      aria-label={ariaLabel}
     />
-    <span className="w-10 h-6 rounded-full bg-gray-200 transition-colors peer-checked:bg-ios-green peer-focus-visible:ring-2 peer-focus-visible:ring-ios-green peer-focus-visible:ring-offset-1" />
+    {/* Track */}
+    <span className="w-10 h-6 rounded-full bg-gray-200 transition-colors peer-checked:bg-ios-green peer-focus-visible:ring-2 peer-focus-visible:ring-ios-green peer-focus-visible:ring-offset-2" />
+    {/* Thumb */}
     <span className="absolute top-[2px] left-[2px] h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
   </label>
 );
 
-// ─── Field Row ────────────────────────────────────────────────────────────────
+// ─── Visibility Row ────────────────────────────────────────────────────────────
+// Combines the data field with its dedicated toggle so keyboard users Tab through
+// one control per field rather than a separate, ambiguous switch.
 
-const FieldRow = ({ label, value, visible, masked }: FieldRowProps) => (
+const VisibilityRow = ({
+  id,
+  fieldLabel,
+  value,
+  masked,
+  visible,
+  onToggle,
+}: VisibilityRowProps) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-    <span className="text-sm font-medium text-gray-600">{label}</span>
-    <span className="text-sm font-medium text-gray-900 tabular-nums ml-4 truncate max-w-[180px]">
-      {visible ? value : masked}
-    </span>
+    <div className="min-w-0 mr-4">
+      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
+        {fieldLabel}
+      </p>
+      <p className="text-sm font-medium text-gray-900 truncate">
+        {visible ? value : masked}
+      </p>
+    </div>
+
+    <div className="flex items-center gap-2 flex-shrink-0">
+      {visible ? (
+        <Eye className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
+      ) : (
+        <EyeOff className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
+      )}
+      <ToggleSwitch
+        id={id}
+        checked={visible}
+        onChange={onToggle}
+        ariaLabel={`Toggle ${fieldLabel.toLowerCase()} visibility`}
+      />
+    </div>
   </div>
 );
 
 // ─── PrivacyShield ─────────────────────────────────────────────────────────────
 
-export function PrivacyShield({ email, phone }: PrivacyShieldProps) {
-  const [shielded, setShielded] = useState(false);
+export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element {
+  const [showEmail, setShowEmail] = useState<boolean>(true);
+  const [showPhone, setShowPhone] = useState<boolean>(true);
+
+  // Composed message for the aria-live region — announced on every state change.
+  const liveStatus: string =
+    showEmail && showPhone
+      ? 'All contact fields visible'
+      : [
+          !showEmail ? 'Email hidden' : '',
+          !showPhone ? 'Phone hidden' : '',
+        ]
+          .filter(Boolean)
+          .join(', ');
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-white/40 bg-white/70 backdrop-blur-md shadow-soft p-5">
+    <section
+      aria-label="Visibility Controls"
+      className="w-full max-w-sm rounded-2xl border border-white/40 bg-white/70 backdrop-blur-md shadow-soft p-5"
+    >
+      {/* Heading */}
+      <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
+        Visibility Controls
+      </h3>
+      <p className="text-xs text-gray-500 mb-4">
+        Toggle visibility for each contact field.
+      </p>
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          {shielded ? (
-            <ShieldCheck
-              className="w-5 h-5 text-ios-green flex-shrink-0"
-              aria-hidden="true"
-            />
-          ) : (
-            <ShieldOff
-              className="w-5 h-5 text-gray-400 flex-shrink-0"
-              aria-hidden="true"
-            />
-          )}
-          <div>
-            <p className="text-sm font-semibold text-gray-900 leading-tight">
-              Privacy Shield
-            </p>
-            <p className="text-xs text-gray-500 leading-tight mt-0.5">
-              {shielded ? 'Contact details are hidden' : 'Contact details are visible'}
-            </p>
-          </div>
-        </div>
-
-        <ToggleSwitch
-          id="privacy-shield-toggle"
-          checked={shielded}
-          onChange={() => setShielded((v) => !v)}
-          ariaLabel={shielded ? 'Disable privacy shield' : 'Enable privacy shield'}
-        />
-      </div>
-
-      {/* Divider */}
-      <div className="h-px bg-gray-100 mb-1" />
-
-      {/* Fields */}
-      <FieldRow
-        label="Email"
+      {/* Per-field toggles */}
+      <VisibilityRow
+        id="toggle-email-visibility"
+        fieldLabel="Email"
         value={email}
-        visible={!shielded}
         masked={maskEmail(email)}
+        visible={showEmail}
+        onToggle={() => setShowEmail((v) => !v)}
       />
-      <FieldRow
-        label="Phone"
+      <VisibilityRow
+        id="toggle-phone-visibility"
+        fieldLabel="Phone"
         value={phone}
-        visible={!shielded}
         masked={maskPhone(phone)}
+        visible={showPhone}
+        onToggle={() => setShowPhone((v) => !v)}
       />
 
-      {/* Status footer */}
-      <div className="mt-3 flex items-center gap-1.5">
-        {shielded ? (
-          <EyeOff className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
-        ) : (
-          <Eye className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
-        )}
-        <span className="text-xs text-gray-400">
-          {shielded ? 'Data masking active' : 'All fields visible'}
-        </span>
-      </div>
-
-    </div>
+      {/* aria-live region — visually hidden, screen readers announce changes here */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {liveStatus}
+      </span>
+    </section>
   );
 }
