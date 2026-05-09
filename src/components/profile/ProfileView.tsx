@@ -22,25 +22,9 @@ interface InfoCardProps {
   value: string;
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-const InfoCard = ({ icon, label, value }: InfoCardProps) => (
-  <div className="flex items-start gap-3 p-4 rounded-xl bg-ios-gray-bg">
-    <span className="text-hushh-blue mt-0.5 flex-shrink-0" aria-hidden="true">
-      {icon}
-    </span>
-    <div className="min-w-0">
-      <p className="text-[10px] font-semibold text-hushh-text-muted uppercase tracking-widest mb-0.5">
-        {label}
-      </p>
-      <p className="text-sm font-medium text-ios-dark truncate">{value}</p>
-    </div>
-  </div>
-);
-
-// ─── Skeleton Loader ──────────────────────────────────────────────────────────
-// Mirrors the exact card/grid layout of ProfileView so the page doesn't shift
-// when data arrives. Uses only Tailwind's built-in animate-pulse utility.
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+// Mirrors the loaded layout exactly — zero layout shift when data arrives.
+// Uses only Tailwind's built-in animate-pulse; no custom CSS or variables.
 
 const ProfileSkeleton = (): JSX.Element => (
   <div
@@ -49,7 +33,7 @@ const ProfileSkeleton = (): JSX.Element => (
     aria-busy="true"
     className="w-full max-w-2xl mx-auto px-4 sm:px-0 space-y-4 animate-pulse"
   >
-    {/* Header card — avatar + name + org */}
+    {/* Header card */}
     <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
         <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gray-200" />
@@ -60,7 +44,7 @@ const ProfileSkeleton = (): JSX.Element => (
       </div>
     </div>
 
-    {/* Contact grid card — matches grid-cols-1 md:grid-cols-2 */}
+    {/* Contact grid — matches grid-cols-1 md:grid-cols-2 */}
     <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6">
       <div className="h-2.5 w-14 bg-gray-200 rounded mb-4" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -77,12 +61,28 @@ const ProfileSkeleton = (): JSX.Element => (
   </div>
 );
 
+// ─── Info Card ────────────────────────────────────────────────────────────────
+
+const InfoCard = ({ icon, label, value }: InfoCardProps) => (
+  <div className="flex items-start gap-3 p-4 rounded-xl bg-ios-gray-bg">
+    <span className="text-hushh-blue mt-0.5 flex-shrink-0" aria-hidden="true">
+      {icon}
+    </span>
+    <div className="min-w-0">
+      <p className="text-[10px] font-semibold text-hushh-text-muted uppercase tracking-widest mb-0.5">
+        {label}
+      </p>
+      <p className="text-sm font-medium text-ios-dark truncate">{value}</p>
+    </div>
+  </div>
+);
+
 // ─── ProfileView ───────────────────────────────────────────────────────────────
 
 export function ProfileView({ userId }: ProfileViewProps): JSX.Element {
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  // Initialize to true only when a fetch is actually possible, avoiding a
-  // synchronous setState call inside the effect (react-hooks/set-state-in-effect).
+  // Initialise to true only when a fetch is possible — avoids calling setState
+  // synchronously inside the effect (react-hooks/set-state-in-effect).
   const [loading, setLoading] = useState<boolean>(Boolean(userId && config.supabaseClient));
   const [error, setError] = useState<string | null>(null);
 
@@ -133,15 +133,11 @@ export function ProfileView({ userId }: ProfileViewProps): JSX.Element {
     };
 
     fetchProfile();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [userId]);
 
-  // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) return <ProfileSkeleton />;
 
-  // ── Error ────────────────────────────────────────────────────────────────────
   if (error || !profile) {
     return (
       <div className="w-full max-w-2xl mx-auto px-4 sm:px-0">
@@ -162,21 +158,17 @@ export function ProfileView({ userId }: ProfileViewProps): JSX.Element {
       aria-label="User Profile"
       className="w-full max-w-2xl mx-auto px-4 sm:px-0 space-y-4"
     >
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
+      {/* Header */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-          {/* Avatar */}
           <div
             className="flex-shrink-0 w-16 h-16 rounded-full bg-ios-gray-bg flex items-center justify-center"
             aria-hidden="true"
           >
             <User className="w-8 h-8 text-hushh-text-muted" />
           </div>
-
-          {/* Identity */}
           <div className="text-center sm:text-left min-w-0">
             <h2 className="text-lg font-semibold text-ios-dark truncate">{name}</h2>
-
             {organisation != null && organisation.length > 0 && (
               <p className="flex items-center justify-center sm:justify-start gap-1 text-sm text-hushh-text-muted mt-1">
                 <Building2 className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
@@ -187,24 +179,14 @@ export function ProfileView({ userId }: ProfileViewProps): JSX.Element {
         </div>
       </div>
 
-      {/* ── Contact info grid ────────────────────────────────────────────────── */}
-      {/* grid-cols-1 on mobile → grid-cols-2 on md+ (PR requirement) */}
+      {/* Contact — grid-cols-1 mobile, grid-cols-2 md+ */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6">
         <h3 className="text-[11px] font-semibold text-hushh-text-muted uppercase tracking-widest mb-4">
           Contact
         </h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoCard
-            icon={<Mail className="w-4 h-4" />}
-            label="Email"
-            value={email || '—'}
-          />
-          <InfoCard
-            icon={<Phone className="w-4 h-4" />}
-            label="Phone"
-            value={phoneDisplay}
-          />
+          <InfoCard icon={<Mail className="w-4 h-4" />} label="Email" value={email || '—'} />
+          <InfoCard icon={<Phone className="w-4 h-4" />} label="Phone" value={phoneDisplay} />
         </div>
       </div>
     </section>

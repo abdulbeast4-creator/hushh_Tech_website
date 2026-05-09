@@ -12,17 +12,14 @@ interface ToggleSwitchProps {
   id: string;
   checked: boolean;
   onChange: () => void;
-  /** Descriptive label read by screen readers, e.g. "Toggle email address visibility" */
   ariaLabel: string;
 }
 
-interface VisibilityRowProps {
-  id: string;
-  fieldLabel: string;
+interface FieldRowProps {
+  label: string;
   value: string;
-  masked: string;
   visible: boolean;
-  onToggle: () => void;
+  masked: string;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -37,8 +34,6 @@ const maskPhone = (phone: string): string =>
   '•'.repeat(Math.min(phone.replace(/\D/g, '').length, 10));
 
 // ─── Toggle Switch ─────────────────────────────────────────────────────────────
-// Uses role="switch" (ARIA spec for binary on/off controls) with aria-checked
-// so screen readers announce "on" / "off" rather than "checked" / "unchecked".
 
 const ToggleSwitch = ({ id, checked, onChange, ariaLabel }: ToggleSwitchProps) => (
   <label
@@ -55,45 +50,25 @@ const ToggleSwitch = ({ id, checked, onChange, ariaLabel }: ToggleSwitchProps) =
       checked={checked}
       onChange={onChange}
     />
-    {/* Track */}
     <span className="w-10 h-6 rounded-full bg-gray-200 transition-colors peer-checked:bg-ios-green peer-focus-visible:ring-2 peer-focus-visible:ring-ios-green peer-focus-visible:ring-offset-2" />
-    {/* Thumb */}
     <span className="absolute top-[2px] left-[2px] h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
   </label>
 );
 
-// ─── Visibility Row ────────────────────────────────────────────────────────────
+// ─── Field Row ────────────────────────────────────────────────────────────────
 
-const VisibilityRow = ({
-  id,
-  fieldLabel,
-  value,
-  masked,
-  visible,
-  onToggle,
-}: VisibilityRowProps) => (
+const FieldRow = ({ label, value, visible, masked }: FieldRowProps) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-    <div className="min-w-0 mr-4">
-      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
-        {fieldLabel}
-      </p>
-      <p className="text-sm font-medium text-gray-900 truncate">
-        {visible ? value : masked}
-      </p>
-    </div>
-
-    <div className="flex items-center gap-2 flex-shrink-0">
+    <span className="text-sm font-medium text-gray-600">{label}</span>
+    <div className="flex items-center gap-2 ml-4 flex-shrink-0">
       {visible ? (
         <Eye className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
       ) : (
         <EyeOff className="w-3.5 h-3.5 text-gray-400" aria-hidden="true" />
       )}
-      <ToggleSwitch
-        id={id}
-        checked={visible}
-        onChange={onToggle}
-        ariaLabel={`Toggle ${fieldLabel.toLowerCase()} visibility`}
-      />
+      <span className="text-sm font-medium text-gray-900 tabular-nums truncate max-w-[160px]">
+        {visible ? value : masked}
+      </span>
     </div>
   </div>
 );
@@ -101,49 +76,52 @@ const VisibilityRow = ({
 // ─── PrivacyShield ─────────────────────────────────────────────────────────────
 
 export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element {
-  const [showEmail, setShowEmail] = useState<boolean>(true);
-  const [showPhone, setShowPhone] = useState<boolean>(true);
+  const [controlled, setControlled] = useState<boolean>(false);
 
-  const liveStatus: string =
-    showEmail && showPhone
-      ? 'All contact fields visible'
-      : [
-          !showEmail ? 'Email hidden' : '',
-          !showPhone ? 'Phone hidden' : '',
-        ]
-          .filter(Boolean)
-          .join(', ');
+  const liveStatus = controlled ? 'Data visibility restricted' : 'All fields visible';
 
   return (
     <section
-      aria-label="Visibility Controls"
+      aria-label="Information Control"
       className="w-full max-w-sm rounded-2xl border border-white/40 bg-white/70 backdrop-blur-md shadow-soft p-5"
     >
-      <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
-        Visibility Controls
-      </h3>
-      <p className="text-xs text-gray-500 mb-4">
-        Toggle visibility for each contact field.
-      </p>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-sm font-semibold text-gray-900 leading-tight">
+            Information Control
+          </p>
+          <p className="text-xs text-gray-500 leading-tight mt-0.5">
+            {controlled ? 'Data visibility restricted' : 'All contact fields visible'}
+          </p>
+        </div>
 
-      <VisibilityRow
-        id="toggle-email-visibility"
-        fieldLabel="Email"
+        <ToggleSwitch
+          id="data-visibility-toggle"
+          checked={controlled}
+          onChange={() => setControlled((v) => !v)}
+          ariaLabel={controlled ? 'Disable data visibility control' : 'Enable data visibility control'}
+        />
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-gray-100 mb-1" />
+
+      {/* Fields */}
+      <FieldRow
+        label="Email"
         value={email}
+        visible={!controlled}
         masked={maskEmail(email)}
-        visible={showEmail}
-        onToggle={() => setShowEmail((v) => !v)}
       />
-      <VisibilityRow
-        id="toggle-phone-visibility"
-        fieldLabel="Phone"
+      <FieldRow
+        label="Phone"
         value={phone}
+        visible={!controlled}
         masked={maskPhone(phone)}
-        visible={showPhone}
-        onToggle={() => setShowPhone((v) => !v)}
       />
 
-      {/* aria-live region — visually hidden, screen readers announce changes here */}
+      {/* Screen reader live region */}
       <span role="status" aria-live="polite" className="sr-only">
         {liveStatus}
       </span>
