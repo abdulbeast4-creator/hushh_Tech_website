@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import HomePage from './pages/home/ui';
 import Leadership from './components/Leadership';
@@ -75,6 +76,7 @@ import DocumentViewerPage from './pages/document-viewer';
 import NDAAdminPage from './pages/nda-admin';
 import { AuthSessionProvider, useAuthSession } from './auth/AuthSessionProvider';
 import AuthRequiredRoute from './components/AuthRequiredRoute';
+import PageTransition from './components/PageTransition';
 
 // Google Analytics configuration
 const GA_TRACKING_ID = 'G-R58S9WWPM0';
@@ -167,6 +169,214 @@ const initializeGoogleAnalytics = () => {
   }
 };
 
+// AnimatedRoutes component - wraps Routes with AnimatePresence for page transitions
+const AnimatedRoutes = ({ session }: { session: any }) => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.key}>
+        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/about/leadership" element={<PageTransition><Leadership /></PageTransition>} />
+        <Route path="/about/philosophy" element={<PageTransition><Philosophy /></PageTransition>} />
+        <Route path="/Login" element={<PageTransition><LoginPage /></PageTransition>} />
+        <Route path="/Contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/benefits" element={<PageTransition><BenefitsPage /></PageTransition>} />
+        <Route path='/services/consumers' element={<PageTransition><Consumers /></PageTransition>} />
+        <Route path='/services/business' element={<PageTransition><Business /></PageTransition>} />
+        <Route path='/Signup' element={<PageTransition><SignupPage /></PageTransition>} />
+        <Route path='/faq' element={<PageTransition><Faq /></PageTransition>} />
+        <Route path='/profile' element={
+          <AuthRequiredRoute>
+            <PageTransition><Profile /></PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path="/career" element={<PageTransition><Career /></PageTransition>} />
+        <Route path="/career/*" element={<PageTransition><Career /></PageTransition>} />
+        <Route path='/privacy-policy' element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+        <Route path='/carrer-privacy-policy' element={<PageTransition><CareersPrivacyPolicy /></PageTransition>} />
+        <Route path="/community" element={
+          <PageTransition><CommunityPage /></PageTransition>
+        } />
+        <Route path='/california-privacy-policy' element={<PageTransition><CaliforniaPrivacyPolicy /></PageTransition>} />
+        <Route path='/eu-uk-jobs-privacy-policy' element={<PageTransition><EUUKPrivacyPolicy /></PageTransition>} />
+        <Route path='/delete-account' element={
+          <AuthRequiredRoute>
+            <PageTransition><DeleteAccountPage /></PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path="/community/*" element={
+          <PageTransition><CommunityPostPage /></PageTransition>
+        } />
+        <Route path="/reports/:id" element={
+          <PageTransition><ReportDetailPage /></PageTransition>
+        } />
+        <Route path="/auth/callback" element={<PageTransition><AuthCallback /></PageTransition>} />
+        <Route path="/investor-guide" element={<PageTransition><InvestorGuidePage /></PageTransition>} />
+        <Route path="/onboarding/financial-link" element={
+          <ProtectedRoute>
+            <PageTransition><FinancialLinkPage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-1" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep1 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-2" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep2 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-3" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep3 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-4" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep4 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-5" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep5 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-6" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep6 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-7" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingStep7 /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-8" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingReviewStep /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/step-9" element={
+          <ProtectedRoute>
+            <PageTransition><OnboardingBankDetailsStep /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/verify" element={
+          <ProtectedRoute>
+            <PageTransition><VerifyIdentityPage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/verify-complete" element={
+          <ProtectedRoute>
+            <PageTransition><VerifyCompletePage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/onboarding/meet-ceo" element={
+          <ProtectedRoute>
+            <PageTransition><MeetCeoPage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/hushh-user-profile" element={
+          <ProtectedRoute>
+            <PageTransition><HushhUserProfilePage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/hushh-user-profile/view" element={
+          <ProtectedRoute>
+            <PageTransition><ViewPreferencesPage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/hushh-user-profile/privacy" element={
+          <ProtectedRoute>
+            <PageTransition><PrivacyControlsPage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile/:id" element={
+          <AuthRequiredRoute>
+            <PageTransition><ViewPreferencesPage /></PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path="/hushhid/:id" element={<PageTransition><PublicHushhProfilePage /></PageTransition>} />
+        <Route path="/hushhid-hero-demo" element={<PageTransition><HushhIDHeroDemo /></PageTransition>} />
+        <Route path='/kyc-verification' element={
+          <PageTransition><KYCVerificationPage /></PageTransition>
+        } />
+        <Route path='/kyc-form' element={
+          <PageTransition><KYCFormPage /></PageTransition>
+        } />
+        <Route path='/discover-fund-a' element={
+          <PageTransition><DiscoverFundA /></PageTransition>
+        } />
+        <Route path='/sell-the-wall' element={
+          <PageTransition><SellTheWallPage /></PageTransition>
+        } />
+        <Route path='/ai-powered-berkshire' element={
+          <PageTransition><AIPoweredBerkshirePage /></PageTransition>
+        } />
+        <Route path='/user-registration' element={
+          <ProtectedRoute>
+            <PageTransition><UserRegistration /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path='/nda-form' element={
+          <AuthRequiredRoute>
+            <PageTransition>
+              <NDARequestModalComponent
+                session={session}
+                onSubmit={(result: string) => {
+                  console.log("NDA submission result:", result);
+                  if (result === "Approved" || result === "Pending" || result === "Requested permission") {
+                    window.location.href = "/";
+                  }
+                }}
+              />
+            </PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path='/investor-profile' element={
+          <ProtectedRoute>
+            <PageTransition><InvestorProfilePage /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path='/investor/:slug' element={<PageTransition><PublicInvestorProfilePage /></PageTransition>} />
+        <Route path='/user-profile' element={
+          <AuthRequiredRoute>
+            <PageTransition><UserProfilePage /></PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path='/your-profile' element={
+          <AuthRequiredRoute>
+            <PageTransition><YourProfilePage /></PageTransition>
+          </AuthRequiredRoute>
+        } />
+        <Route path='/kyc-demo' element={<PageTransition><KYCDemoPage /></PageTransition>} />
+        <Route path='/kyc-flow' element={<PageTransition><KycFlowPage /></PageTransition>} />
+        <Route path='/a2a-playground' element={<PageTransition><A2APlaygroundPage /></PageTransition>} />
+        <Route path='/receipt-generator' element={<PageTransition><ReceiptGeneratorPage /></PageTransition>} />
+        <Route path='/developer-docs' element={<PageTransition><DeveloperDocsPage /></PageTransition>} />
+        <Route path='/hushh-ai' element={<PageTransition><HushhAIPage /></PageTransition>} />
+        <Route path='/hushh-ai/login' element={<PageTransition><HushhAILoginPage /></PageTransition>} />
+        <Route path='/hushh-ai/signup' element={<PageTransition><HushhAISignupPage /></PageTransition>} />
+        <Route path='/kai' element={<PageTransition><KaiApp /></PageTransition>} />
+        <Route
+          path='/kai-india'
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-black" />}>
+              <PageTransition><KaiIndiaApp /></PageTransition>
+            </Suspense>
+          }
+        />
+        <Route path='/studio' element={<PageTransition><HushhStudioApp /></PageTransition>} />
+        <Route path='/sign-nda' element={<PageTransition><SignNDAPage /></PageTransition>} />
+        <Route path='/document-viewer' element={<PageTransition><DocumentViewerPage /></PageTransition>} />
+        <Route path='/nda-admin' element={<PageTransition><NDAAdminPage /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 function App() {
   // Initialize Google Analytics
   useEffect(() => {
@@ -182,228 +392,7 @@ function App() {
       <div className="min-h-screen flex flex-col">
         {showNavbar && <Navbar />}
         <ContentWrapper>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about/leadership" element={<Leadership />} />
-            <Route path="/about/philosophy" element={<Philosophy />} />
-            <Route path="/Login" element={<LoginPage />} />
-            <Route path="/Contact" element={<Contact />} />
-            <Route path="/benefits" element={<BenefitsPage />} />
-            <Route path='/services/consumers' element={<Consumers />} />
-            <Route path='/services/business' element={<Business />} />
-            <Route path='/Signup' element={<SignupPage />} />
-            <Route path='/faq' element={<Faq />} />
-            <Route path='/profile' element={
-              <AuthRequiredRoute>
-                <Profile />
-              </AuthRequiredRoute>
-            } />
-            <Route path="/career" element={<Career />} />
-            <Route path="/career/*" element={<Career />} />
-            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-            <Route path='/carrer-privacy-policy' element={<CareersPrivacyPolicy />} />
-            <Route path="/community" element={
-              <CommunityPage />
-            } />
-            <Route path='/california-privacy-policy' element={<CaliforniaPrivacyPolicy />} />
-            <Route path='/eu-uk-jobs-privacy-policy' element={<EUUKPrivacyPolicy />} />
-            <Route path='/delete-account' element={
-              <AuthRequiredRoute>
-                <DeleteAccountPage />
-              </AuthRequiredRoute>
-            } />
-            <Route path="/community/*" element={
-              <CommunityPostPage />
-            } />
-            <Route path="/reports/:id" element={
-
-              <ReportDetailPage />
-
-            } />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            {/* Investor Onboarding Guide - Public landing page */}
-            <Route path="/investor-guide" element={<InvestorGuidePage />} />
-            {/* Financial Link — mandatory pre-step before onboarding */}
-            <Route path="/onboarding/financial-link" element={
-              <ProtectedRoute>
-                <FinancialLinkPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-1" element={
-              <ProtectedRoute>
-                <OnboardingStep1 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-2" element={
-              <ProtectedRoute>
-                <OnboardingStep2 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-3" element={
-              <ProtectedRoute>
-                <OnboardingStep3 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-4" element={
-              <ProtectedRoute>
-                <OnboardingStep4 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-5" element={
-              <ProtectedRoute>
-                <OnboardingStep5 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-6" element={
-              <ProtectedRoute>
-                <OnboardingStep6 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-7" element={
-              <ProtectedRoute>
-                <OnboardingStep7 />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-8" element={
-              <ProtectedRoute>
-                <OnboardingReviewStep />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/step-9" element={
-              <ProtectedRoute>
-                <OnboardingBankDetailsStep />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/verify" element={
-              <ProtectedRoute>
-                <VerifyIdentityPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/verify-complete" element={
-              <ProtectedRoute>
-                <VerifyCompletePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/onboarding/meet-ceo" element={
-              <ProtectedRoute>
-                <MeetCeoPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/hushh-user-profile" element={
-              <ProtectedRoute>
-                <HushhUserProfilePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/hushh-user-profile/view" element={
-              <ProtectedRoute>
-                <ViewPreferencesPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/hushh-user-profile/privacy" element={
-              <ProtectedRoute>
-                <PrivacyControlsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile/:id" element={
-              <AuthRequiredRoute>
-                <ViewPreferencesPage />
-              </AuthRequiredRoute>
-            } />
-            <Route path="/hushhid/:id" element={<PublicHushhProfilePage />} />
-            <Route path="/hushhid-hero-demo" element={<HushhIDHeroDemo />} />
-            {/* <Route path="/solutions" element={<SolutionsPage />} /> */}
-            <Route path='/kyc-verification' element={
-
-              <KYCVerificationPage />
-
-            } />
-            <Route path='/kyc-form' element={
-
-              <KYCFormPage />
-
-            } />
-            <Route path='/discover-fund-a' element={
-
-              <DiscoverFundA />
-
-            } />
-            <Route path='/sell-the-wall' element={
-
-              <SellTheWallPage />
-
-            } />
-            <Route path='/ai-powered-berkshire' element={
-
-              <AIPoweredBerkshirePage />
-
-            } />
-            <Route path='/user-registration' element={
-              <ProtectedRoute>
-                <UserRegistration />
-              </ProtectedRoute>
-            } />
-            <Route path='/nda-form' element={
-              <AuthRequiredRoute>
-                <NDARequestModalComponent
-                  session={session}
-                  onSubmit={(result: string) => {
-                    console.log("NDA submission result:", result);
-                    // Handle post-submission actions here
-                    if (result === "Approved" || result === "Pending" || result === "Requested permission") {
-                      // Redirect to appropriate page on success
-                      window.location.href = "/";
-                    }
-                  }}
-                />
-              </AuthRequiredRoute>
-
-            } />
-            <Route path='/investor-profile' element={
-              <ProtectedRoute>
-                <InvestorProfilePage />
-              </ProtectedRoute>
-            } />
-            <Route path='/investor/:slug' element={<PublicInvestorProfilePage />} />
-            <Route path='/user-profile' element={
-              <AuthRequiredRoute>
-                <UserProfilePage />
-              </AuthRequiredRoute>
-            } />
-            <Route path='/your-profile' element={
-              <AuthRequiredRoute>
-                <YourProfilePage />
-              </AuthRequiredRoute>
-            } />
-            <Route path='/kyc-demo' element={<KYCDemoPage />} />
-            <Route path='/kyc-flow' element={<KycFlowPage />} />
-            <Route path='/a2a-playground' element={<A2APlaygroundPage />} />
-            <Route path='/receipt-generator' element={<ReceiptGeneratorPage />} />
-            <Route path='/developer-docs' element={<DeveloperDocsPage />} />
-            <Route path='/hushh-ai' element={<HushhAIPage />} />
-            <Route path='/hushh-ai/login' element={<HushhAILoginPage />} />
-            <Route path='/hushh-ai/signup' element={<HushhAISignupPage />} />
-            {/* Kai - Financial Intelligence Agent */}
-            {/* Real-time AI voice/video financial advisor powered by Gemini 2.0 Flash */}
-            <Route path='/kai' element={<KaiApp />} />
-            {/* Kai India - Indian Market Intelligence Dashboard */}
-            {/* Real-time NSE/BSE market data powered by Gemini 2.5 Flash with Google Search */}
-            <Route
-              path='/kai-india'
-              element={
-                <Suspense fallback={<div className="min-h-screen bg-black" />}>
-                  <KaiIndiaApp />
-                </Suspense>
-              }
-            />
-            {/* Hushh Studio - FREE AI Video Generation */}
-            {/* Powered by Google Veo 3.1 - No login required, free for Indian audience */}
-            <Route path='/studio' element={<HushhStudioApp />} />
-            {/* Global NDA Signing Page */}
-            <Route path='/sign-nda' element={<SignNDAPage />} />
-            <Route path='/document-viewer' element={<DocumentViewerPage />} />
-            {/* NDA Admin Page - Password protected view of all NDA agreements */}
-            <Route path='/nda-admin' element={<NDAAdminPage />} />
-          </Routes>
+          <AnimatedRoutes session={session} />
         </ContentWrapper>
         {showFooter && <Footer />}
         {showMobileNav && <MobileBottomNav />}
