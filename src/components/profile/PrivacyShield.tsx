@@ -1,18 +1,19 @@
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface PrivacyShieldProps {
   email: string;
   phone: string;
+  emailControl?: ReactNode;
+  phoneControl?: ReactNode;
+  className?: string;
 }
 
 interface ToggleSwitchProps {
   id: string;
   checked: boolean;
   onChange: () => void;
-  /** Descriptive label read by screen readers, e.g. "Toggle email address visibility" */
   ariaLabel: string;
 }
 
@@ -23,23 +24,25 @@ interface VisibilityRowProps {
   masked: string;
   visible: boolean;
   onToggle: () => void;
+  children?: ReactNode;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+export const maskEmail = (email: string): string => {
+  const trimmedEmail = email.trim();
+  const atIdx = trimmedEmail.indexOf('@');
 
-const maskEmail = (email: string): string => {
-  const atIdx = email.indexOf('@');
   if (atIdx < 0) return '••••••••';
-  return `${'•'.repeat(Math.min(atIdx, 6))}@${email.slice(atIdx + 1)}`;
+
+  const domain = trimmedEmail.slice(atIdx + 1);
+  if (!domain) return '••••••••';
+
+  return `${'•'.repeat(Math.min(atIdx, 6))}@${domain}`;
 };
 
-const maskPhone = (phone: string): string =>
-  '•'.repeat(Math.min(phone.replace(/\D/g, '').length, 10));
-
-// ─── Toggle Switch ─────────────────────────────────────────────────────────────
-// Uses role="switch" (ARIA spec for binary on/off controls) with aria-checked
-// so screen readers announce "on" / "off" rather than "checked" / "unchecked".
-// The sr-only input is naturally Tab-focusable; peer-focus-visible shows a ring.
+export const maskPhone = (phone: string): string => {
+  const digitCount = phone.replace(/\D/g, '').length;
+  return digitCount > 0 ? '•'.repeat(Math.min(digitCount, 10)) : '••••••••';
+};
 
 const ToggleSwitch = ({ id, checked, onChange, ariaLabel }: ToggleSwitchProps) => (
   <label
@@ -56,16 +59,10 @@ const ToggleSwitch = ({ id, checked, onChange, ariaLabel }: ToggleSwitchProps) =
       checked={checked}
       onChange={onChange}
     />
-    {/* Track */}
     <span className="w-10 h-6 rounded-full bg-gray-200 transition-colors peer-checked:bg-ios-green peer-focus-visible:ring-2 peer-focus-visible:ring-ios-green peer-focus-visible:ring-offset-2" />
-    {/* Thumb */}
     <span className="absolute top-[2px] left-[2px] h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
   </label>
 );
-
-// ─── Visibility Row ────────────────────────────────────────────────────────────
-// Combines the data field with its dedicated toggle so keyboard users Tab through
-// one control per field rather than a separate, ambiguous switch.
 
 const VisibilityRow = ({
   id,
@@ -74,15 +71,20 @@ const VisibilityRow = ({
   masked,
   visible,
   onToggle,
+  children,
 }: VisibilityRowProps) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
     <div className="min-w-0 mr-4">
       <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
         {fieldLabel}
       </p>
-      <p className="text-sm font-medium text-gray-900 truncate">
-        {visible ? value : masked}
-      </p>
+      {visible && children ? (
+        <div className="text-sm font-medium text-gray-900">{children}</div>
+      ) : (
+        <p className="text-sm font-medium text-gray-900 truncate">
+          {visible ? value : masked}
+        </p>
+      )}
     </div>
 
     <div className="flex items-center gap-2 flex-shrink-0">
@@ -95,19 +97,22 @@ const VisibilityRow = ({
         id={id}
         checked={visible}
         onChange={onToggle}
-        ariaLabel={`Toggle ${fieldLabel.toLowerCase()} visibility`}
+        ariaLabel={`${visible ? 'Hide' : 'Show'} ${fieldLabel.toLowerCase()}`}
       />
     </div>
   </div>
 );
 
-// ─── PrivacyShield ─────────────────────────────────────────────────────────────
-
-export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element {
+export function PrivacyShield({
+  email,
+  phone,
+  emailControl,
+  phoneControl,
+  className = '',
+}: PrivacyShieldProps): JSX.Element {
   const [showEmail, setShowEmail] = useState<boolean>(true);
   const [showPhone, setShowPhone] = useState<boolean>(true);
 
-  // Composed message for the aria-live region — announced on every state change.
   const liveStatus: string =
     showEmail && showPhone
       ? 'All contact fields visible'
@@ -121,9 +126,8 @@ export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element
   return (
     <section
       aria-label="Visibility Controls"
-      className="w-full max-w-sm rounded-2xl border border-white/40 bg-white/70 backdrop-blur-md shadow-soft p-5"
+      className={`w-full rounded-2xl border border-gray-100 bg-white/70 p-5 shadow-soft backdrop-blur-md ${className}`}
     >
-      {/* Heading */}
       <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
         Visibility Controls
       </h3>
@@ -131,7 +135,6 @@ export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element
         Toggle visibility for each contact field.
       </p>
 
-      {/* Per-field toggles */}
       <VisibilityRow
         id="toggle-email-visibility"
         fieldLabel="Email"
@@ -139,7 +142,9 @@ export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element
         masked={maskEmail(email)}
         visible={showEmail}
         onToggle={() => setShowEmail((v) => !v)}
-      />
+      >
+        {emailControl}
+      </VisibilityRow>
       <VisibilityRow
         id="toggle-phone-visibility"
         fieldLabel="Phone"
@@ -147,9 +152,10 @@ export function PrivacyShield({ email, phone }: PrivacyShieldProps): JSX.Element
         masked={maskPhone(phone)}
         visible={showPhone}
         onToggle={() => setShowPhone((v) => !v)}
-      />
+      >
+        {phoneControl}
+      </VisibilityRow>
 
-      {/* aria-live region — visually hidden, screen readers announce changes here */}
       <span role="status" aria-live="polite" className="sr-only">
         {liveStatus}
       </span>
