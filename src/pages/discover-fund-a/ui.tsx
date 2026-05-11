@@ -202,7 +202,7 @@ const FundA = () => {
               <p className="text-[13px] text-gray-400 mb-4">
                 {targetIRRPeriod}
               </p>
-              <p className="text-[9px] text-gray-600 italic max-w-[220px] mx-auto leading-relaxed">
+              <p className="text-[11px] text-gray-600 italic max-w-[220px] mx-auto leading-relaxed">
                 {targetIRRDisclaimer}
               </p>
             </div>
@@ -353,7 +353,7 @@ const FundA = () => {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div className="text-center">
-                  <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
+                  <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-0.5 whitespace-nowrap">
                     Mgmt
                   </p>
                   <p className="text-[12px] font-semibold text-black">
@@ -361,7 +361,7 @@ const FundA = () => {
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
+                  <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-0.5 whitespace-nowrap">
                     Perf
                   </p>
                   <p className="text-[12px] font-semibold text-black">
@@ -369,7 +369,7 @@ const FundA = () => {
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
+                  <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-0.5 whitespace-nowrap">
                     Hurdle
                   </p>
                   <p className="text-[12px] font-semibold text-black">
@@ -425,7 +425,7 @@ const FundA = () => {
 
         {/* ── Disclaimer ── */}
         <p
-          className="text-[9px] text-gray-400 text-center leading-relaxed italic max-w-xs mx-auto mb-4"
+          className="text-[11px] text-gray-400 text-center leading-relaxed italic max-w-xs mx-auto mb-4"
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
           Investing involves risk, including possible loss of principal. Past

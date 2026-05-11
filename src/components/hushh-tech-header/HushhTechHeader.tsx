@@ -25,7 +25,7 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
       ) : (
-        <span className="text-[9px] font-bold text-gray-600">
+        <span className="text-[11px] font-bold text-gray-600 whitespace-nowrap">
           {quote.displaySymbol.charAt(0)}
         </span>
       )}
@@ -38,7 +38,7 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
 
     {/* Change arrow + percent */}
     <div className={`ml-0.5 flex items-center gap-0.5 ${quote.isUp ? "text-green-600" : "text-red-500"}`}>
-      <span className="text-[9px]">{quote.isUp ? "▲" : "▼"}</span>
+      <span className="text-[11px]">{quote.isUp ? "▲" : "▼"}</span>
       <span className={`text-[10px] font-semibold ${isLoading ? "animate-pulse" : ""}`}>
         {Math.abs(quote.percentChange).toFixed(1)}%
       </span>
@@ -131,7 +131,7 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
             {lastUpdated && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[9px] font-medium text-gray-400">
+                <span className="text-[11px] font-medium text-gray-400 whitespace-nowrap">
                   {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
