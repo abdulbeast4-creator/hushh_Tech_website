@@ -348,6 +348,7 @@ export default function Navbar() {
           <div
             ref={drawerRef}
             className="fixed inset-0 bg-[#F2F2F7] overflow-y-auto"
+            onScroll={handleMenuScroll}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col min-h-full max-w-md mx-auto w-full px-4 pb-10">
