@@ -163,6 +163,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about/leadership" element={<Leadership />} />
             <Route path="/about/philosophy" element={<Philosophy />} />
+            {/* Redirect for shorter path: /philosophy -> /about/philosophy */}
+            <Route path="/philosophy" element={<Navigate to="/about/philosophy" replace />} />
             <Route path="/Login" element={<LoginPage />} />
             <Route path="/Contact" element={<Contact />} />
             <Route path="/benefits" element={<BenefitsPage />} />
@@ -178,7 +180,9 @@ function App() {
             <Route path="/career" element={<Career />} />
             <Route path="/career/*" element={<Career />} />
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-            <Route path='/carrer-privacy-policy' element={<CareersPrivacyPolicy />} />
+            <Route path='/career-privacy-policy' element={<CareersPrivacyPolicy />} />
+            {/* Redirect for typo fix: /carrer-privacy-policy -> /career-privacy-policy */}
+            <Route path='/carrer-privacy-policy' element={<Navigate to='/career-privacy-policy' replace />} />
             <Route path="/community" element={
               <CommunityPage />
             } />
