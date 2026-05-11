@@ -107,7 +107,7 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
           <section className="relative w-full bg-[#F8F9FA] py-2 border-t border-b border-gray-200">
             {/* Fade-masked marquee */}
             <div className="hushh-ticker-mask relative flex w-full overflow-hidden">
-              <div className="hushh-ticker-track flex items-center gap-2.5 px-3">
+            <div className="hushh-ticker-track flex items-center gap-2.5 px-3 pr-[80px] sm:pr-3">
                 {/* First set */}
                 {quotes.map((quote, idx) => (
                   <TickerChip
