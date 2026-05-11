@@ -178,7 +178,9 @@ function App() {
             <Route path="/career" element={<Career />} />
             <Route path="/career/*" element={<Career />} />
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-            <Route path='/carrer-privacy-policy' element={<CareersPrivacyPolicy />} />
+            <Route path='/career-privacy-policy' element={<CareersPrivacyPolicy />} />
+            {/* Redirect for backward compatibility with old typo */}
+            <Route path='/carrer-privacy-policy' element={<Navigate to='/career-privacy-policy' replace />} />
             <Route path="/community" element={
               <CommunityPage />
             } />

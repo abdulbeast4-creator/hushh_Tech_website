@@ -76,7 +76,8 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[200]">
           {languages.map((lang) => {
-            const isSelected = i18n.language === lang.code;
+            // Use startsWith for partial match (e.g., en-US matches en)
+            const isSelected = i18n.language.startsWith(lang.code);
             return (
               <button
                 key={lang.code}
