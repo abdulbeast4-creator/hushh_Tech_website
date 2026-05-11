@@ -12,6 +12,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Box, Text, Flex, Spinner, Image } from "@chakra-ui/react";
+import OptimizedImage from "./OptimizedImage";
 import config from "../resources/config/config";
 import { Session } from "@supabase/supabase-js";
 import HushhLogo from "./images/Hushhogo.png";
@@ -273,11 +274,14 @@ export default function Hero() {
             border="1px solid" borderColor="gray.100"
             boxShadow="0 2px 12px rgba(0,0,0,0.06)"
           >
-            <Image
+            <OptimizedImage
               src={HushhLogo}
               alt="Hushh brand logo"
-              w="48px" h="48px"
+              w="48px"
+              h="48px"
               objectFit="contain"
+              aspectRatio="1"
+              skeletonBg="rgba(240, 240, 240, 0.8)"
             />
           </Flex>
 
