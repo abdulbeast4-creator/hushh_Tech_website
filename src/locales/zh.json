@@ -1,0 +1,14 @@
+{
+  "navigation": {
+    "home": "首页",
+    "philosophy": "我们的哲学",
+    "fundA": "基金 A",
+    "community": "社区",
+    "kyc": "KYC 工作室 Alpha",
+    "unlock": "解锁 30万 金币",
+    "contact": "联系我们",
+    "faq": "常见问题",
+    "login": "登录",
+    "signup": "注册"
+  }
+}

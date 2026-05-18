@@ -1,0 +1,14 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "philosophy": "Notre Philosophie",
+    "fundA": "Fonds A",
+    "community": "Communauté",
+    "kyc": "KYC Studio Alpha",
+    "unlock": "Débloquer 300K Pièces",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "login": "Connexion",
+    "signup": "S'inscrire"
+  }
+}
