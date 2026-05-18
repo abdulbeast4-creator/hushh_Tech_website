@@ -75,8 +75,8 @@ import SignNDAPage from './pages/sign-nda';
 import DocumentViewerPage from './pages/document-viewer';
 import NDAAdminPage from './pages/nda-admin';
 import { AuthSessionProvider, useAuthSession } from './auth/AuthSessionProvider';
+import { LanguageProvider } from './context/LanguageContext';
 import AuthRequiredRoute from './components/AuthRequiredRoute';
-import HushhHackathonPage from './pages/hushh-hackathon/ui';
 import MetricsPage from './pages/metrics';
 
 const KaiIndiaApp = React.lazy(() => import('./kai-india/pages'));
@@ -391,6 +391,7 @@ function App() {
   };
 
   return (
+    <LanguageProvider>
     <ChakraProvider theme={theme}>
       <AuthSessionProvider>
         <Router>
@@ -403,6 +404,7 @@ function App() {
         </Router>
       </AuthSessionProvider>
     </ChakraProvider>
+    </LanguageProvider>
   );
 }
 

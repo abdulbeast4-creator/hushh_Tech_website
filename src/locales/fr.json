@@ -9,6 +9,20 @@
     "contact": "Contact",
     "faq": "FAQ",
     "login": "Connexion",
-    "signup": "S'inscrire"
+    "signup": "S'inscrire",
+    "viewProfile": "Voir le profil",
+    "logout": "Déconnexion",
+    "menu": "Menu",
+    "deleteAccount": "Supprimer le compte"
+  },
+  "common": {
+    "welcome": "Bienvenue chez Hushh Technologies",
+    "signInMessage": "Merci de vous être connecté."
+  },
+  "sidebar": {
+    "bookConsultation": "Réserver une consultation",
+    "transactionHistory": "Historique des transactions",
+    "coinsSubLabel": "1 $ ou code promo",
+    "coinsUnit": "pièces"
   }
 }

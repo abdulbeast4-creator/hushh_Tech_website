@@ -9,6 +9,20 @@
     "contact": "联系我们",
     "faq": "常见问题",
     "login": "登录",
-    "signup": "注册"
+    "signup": "注册",
+    "viewProfile": "查看资料",
+    "logout": "退出登录",
+    "menu": "菜单",
+    "deleteAccount": "删除账户"
+  },
+  "common": {
+    "welcome": "欢迎来到 Hushh 科技",
+    "signInMessage": "感谢您登录。"
+  },
+  "sidebar": {
+    "bookConsultation": "预约咨询",
+    "transactionHistory": "交易记录",
+    "coinsSubLabel": "1美元或使用优惠码",
+    "coinsUnit": "枚"
   }
 }

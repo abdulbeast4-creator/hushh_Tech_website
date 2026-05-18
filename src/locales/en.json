@@ -9,6 +9,20 @@
     "contact": "Contact",
     "faq": "FAQ",
     "login": "Log In",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "viewProfile": "View Profile",
+    "logout": "Log Out",
+    "menu": "Menu",
+    "deleteAccount": "Delete Account"
+  },
+  "common": {
+    "welcome": "Welcome to Hushh Technologies",
+    "signInMessage": "Thank you for signing in."
+  },
+  "sidebar": {
+    "bookConsultation": "Book Consultation",
+    "transactionHistory": "Transaction History",
+    "coinsSubLabel": "$1 or use coupon code",
+    "coinsUnit": "coins"
   }
 }

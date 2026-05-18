@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX, FiChevronDown, FiUser, FiTrash2, FiChevronDown as FiArrowDown } from "react-icons/fi";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../context/LanguageContext";
+import { t as tx } from "../utils/translate";
 import { Image, useToast, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import hushhLogo from "../components/images/Hushhogo.png";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -46,7 +47,7 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
 };
 
 export default function Navbar() {
-  const { t, i18n } = useTranslation();
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [toastShown, setToastShown] = useState(false);
   const previousUserIdRef = useRef<string | null>(null);
@@ -114,8 +115,8 @@ export default function Navbar() {
     }
     
     toast({
-      title: t('common.welcome'),
-      description: t('common.signInMessage'),
+      title: tx('common.welcome', language),
+      description: tx('common.signInMessage', language),
       status: "success",
       duration: 5000,
       isClosable: true,
@@ -144,13 +145,13 @@ export default function Navbar() {
   const isAuthenticated = status === "authenticated";
 
   const primaryNavLinks = [
-    { path: "/", label: t('nav.home') },
-    { path: "/about/leadership", label: t('nav.ourPhilosophy') },
-    { path: "/discover-fund-a", label: t('nav.fundA') },
-    { path: "/community", label: t('nav.community') },
-    { path: "/a2a-playground", label: t('nav.kycStudio') },
-    { path: "/contact", label: t('nav.contact') },
-    { path: "/faq", label: t('nav.faq') },
+    { path: "/", label: tx('navigation.home', language) },
+    { path: "/about/leadership", label: tx('navigation.philosophy', language) },
+    { path: "/discover-fund-a", label: tx('navigation.fundA', language) },
+    { path: "/community", label: tx('navigation.community', language) },
+    { path: "/a2a-playground", label: tx('navigation.kyc', language) },
+    { path: "/contact", label: tx('navigation.contact', language) },
+    { path: "/faq", label: tx('navigation.faq', language) },
   ];
 
   const toggleDrawer = () => setIsOpen((prev) => !prev);
@@ -264,13 +265,13 @@ export default function Navbar() {
                       onClick={() => navigate('/hushh-user-profile')}
                       className="hidden xl:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
                     >
-                      {t('nav.viewProfile')}
+                      {tx('navigation.viewProfile', language)}
                     </button>
                     <button
                       onClick={handleLogout}
                       className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f6cc7] transition-colors"
                     >
-                      {t('nav.logout')}
+                      {tx('navigation.logout', language)}
                     </button>
                   </>
                 ) : (
@@ -278,7 +279,7 @@ export default function Navbar() {
                     onClick={() => navigate('/Login')}
                     className="inline-flex items-center justify-center rounded-full bg-[#2F80ED] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f6cc7] transition-colors"
                   >
-                    {t('nav.login')}
+                    {tx('navigation.login', language)}
                   </button>
                 )}
               </>
@@ -354,7 +355,7 @@ export default function Navbar() {
               {/* Header: Menu title + Close button */}
               <div className="flex items-center justify-between pt-14 pb-4 px-0">
                 <h2 className="text-[34px] font-bold text-black tracking-tight leading-none">
-                  {t('nav.menu', 'Menu')}
+                  {tx('navigation.menu', language)}
                 </h2>
                 <button
                   onClick={toggleDrawer}
@@ -368,11 +369,11 @@ export default function Navbar() {
               {/* Section 1: Primary Navigation */}
               <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
                 {[
-                  { path: "/", label: t('nav.home'), icon: "home", bg: "#007AFF" },
-                  { path: "/about/leadership", label: t('nav.ourPhilosophy'), icon: "menu_book", bg: "#34C759" },
-                  { path: "/discover-fund-a", label: t('nav.fundA'), icon: "pie_chart", bg: "#5856D6" },
-                  { path: "/community", label: t('nav.community'), icon: "groups", bg: "#FF9500" },
-                  { path: "/a2a-playground", label: t('nav.kycStudio'), icon: "verified_user", bg: "#FF2D55" },
+                  { path: "/", label: tx('navigation.home', language), icon: "home", bg: "#007AFF" },
+                  { path: "/about/leadership", label: tx('navigation.philosophy', language), icon: "menu_book", bg: "#34C759" },
+                  { path: "/discover-fund-a", label: tx('navigation.fundA', language), icon: "pie_chart", bg: "#5856D6" },
+                  { path: "/community", label: tx('navigation.community', language), icon: "groups", bg: "#FF9500" },
+                  { path: "/a2a-playground", label: tx('navigation.kyc', language), icon: "verified_user", bg: "#FF2D55" },
                 ].map(({ path, label, icon, bg }, idx, arr) => (
                   <button
                     key={path}
@@ -402,8 +403,8 @@ export default function Navbar() {
               {/* Section 2: Contact & FAQ */}
               <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
                 {[
-                  { path: "/contact", label: t('nav.contact'), icon: "mail", bg: "#8E8E93" },
-                  { path: "/faq", label: t('nav.faq'), icon: "help", bg: "#FF9500" },
+                  { path: "/contact", label: tx('navigation.contact', language), icon: "mail", bg: "#8E8E93" },
+                  { path: "/faq", label: tx('navigation.faq', language), icon: "help", bg: "#FF9500" },
                 ].map(({ path, label, icon, bg }, idx, arr) => (
                   <button
                     key={path}
@@ -440,8 +441,8 @@ export default function Navbar() {
                       <span className="material-symbols-outlined text-white text-[18px]" style={{ fontVariationSettings: "'FILL' 1, 'wght' 500" }}>lock</span>
                     </div>
                     <div className="flex flex-col flex-grow text-left">
-                      <span className="text-[17px] text-black font-medium leading-tight">Unlock 300K Coins</span>
-                      <span className="text-[13px] text-[#8E8E93] leading-tight mt-0.5">$1 or use coupon code</span>
+                      <span className="text-[17px] text-black font-medium leading-tight">{tx('navigation.unlock', language)}</span>
+                      <span className="text-[13px] text-[#8E8E93] leading-tight mt-0.5">{tx('sidebar.coinsSubLabel', language)}</span>
                     </div>
                     <svg className="w-[7px] h-[12px] text-[#C7C7CC] shrink-0" viewBox="0 0 7 12" fill="none">
                       <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -481,7 +482,7 @@ export default function Navbar() {
                       <div className="w-[29px] h-[29px] rounded-[7px] bg-[#34C759] flex items-center justify-center mr-3 shrink-0">
                         <span className="material-symbols-outlined text-white text-[18px]" style={{ fontVariationSettings: "'FILL' 1, 'wght' 500" }}>calendar_month</span>
                       </div>
-                      <span className="text-[17px] text-black flex-grow text-left leading-none">Book Consultation</span>
+                      <span className="text-[17px] text-black flex-grow text-left leading-none">{tx('sidebar.bookConsultation', language)}</span>
                       <svg className="w-[7px] h-[12px] text-[#C7C7CC] shrink-0" viewBox="0 0 7 12" fill="none">
                         <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
@@ -494,7 +495,7 @@ export default function Navbar() {
                       <div className="w-[29px] h-[29px] rounded-[7px] bg-[#5856D6] flex items-center justify-center mr-3 shrink-0">
                         <span className="material-symbols-outlined text-white text-[18px]" style={{ fontVariationSettings: "'FILL' 1, 'wght' 500" }}>receipt_long</span>
                       </div>
-                      <span className="text-[17px] text-black flex-grow text-left leading-none">Transaction History</span>
+                      <span className="text-[17px] text-black flex-grow text-left leading-none">{tx('sidebar.transactionHistory', language)}</span>
                       <svg className="w-[7px] h-[12px] text-[#C7C7CC] shrink-0" viewBox="0 0 7 12" fill="none">
                         <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
@@ -514,7 +515,7 @@ export default function Navbar() {
                       <span className="material-symbols-outlined text-white text-[18px]" style={{ fontVariationSettings: "'FILL' 1, 'wght' 500" }}>person</span>
                     </div>
                     <span className="text-[17px] text-black flex-grow text-left leading-none">
-                      {t('nav.viewProfile')}
+                      {tx('navigation.viewProfile', language)}
                     </span>
                     <svg className="w-[7px] h-[12px] text-[#C7C7CC] shrink-0" viewBox="0 0 7 12" fill="none">
                       <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -529,7 +530,7 @@ export default function Navbar() {
                     className="flex items-center w-full min-h-[44px] py-2.5 pr-4 pl-4 active:bg-[#E5E5EA] transition-colors"
                   >
                     <span className="text-[17px] text-[#FF3B30] flex-grow text-left leading-none pl-0">
-                      {t('nav.deleteAccount')}
+                      {tx('navigation.deleteAccount', language)}
                     </span>
                   </button>
                 </div>
@@ -545,14 +546,14 @@ export default function Navbar() {
                     onClick={handleLogout}
                     className="w-full h-[50px] rounded-[12px] bg-white text-[#007AFF] font-semibold text-[17px] active:scale-[0.98] active:opacity-90 transition-all flex items-center justify-center shadow-sm"
                   >
-                    {t('nav.logout')}
+                    {tx('navigation.logout', language)}
                   </button>
                 ) : (
                   <button
                     onClick={() => handleLinkClick("/Login")}
                     className="w-full h-[50px] rounded-[12px] bg-[#007AFF] text-white font-semibold text-[17px] active:scale-[0.98] active:opacity-90 transition-all flex items-center justify-center shadow-sm"
                   >
-                    {t('nav.login')}
+                    {tx('navigation.login', language)}
                   </button>
                 )}
                 <p className="text-center text-[13px] text-[#8E8E93] font-normal mt-4">

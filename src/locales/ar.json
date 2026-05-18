@@ -9,6 +9,20 @@
     "contact": "اتصل بنا",
     "faq": "الأسئلة الشائعة",
     "login": "تسجيل الدخول",
-    "signup": "إنشاء حساب"
+    "signup": "إنشاء حساب",
+    "viewProfile": "عرض الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "menu": "القائمة",
+    "deleteAccount": "حذف الحساب"
+  },
+  "common": {
+    "welcome": "مرحباً بك في تقنيات Hushh",
+    "signInMessage": "شكراً لتسجيل دخولك."
+  },
+  "sidebar": {
+    "bookConsultation": "حجز استشارة",
+    "transactionHistory": "سجل المعاملات",
+    "coinsSubLabel": "دولار واحد أو استخدم رمز الكوبون",
+    "coinsUnit": "عملة"
   }
 }
