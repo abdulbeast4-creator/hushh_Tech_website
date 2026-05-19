@@ -1,8 +1,7 @@
 import React from "react";
 import img from "../../files/img.png";
 import img2 from "../../files/img (1).png";
-import { Box, Container, Heading, Text, SimpleGrid, Flex, Image, VStack, HStack, Icon } from "@chakra-ui/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { Box, Container, Heading, Text, SimpleGrid, Flex, Image } from "@chakra-ui/react";
 
 export default function Leadership() {
   return (
@@ -405,7 +404,7 @@ export default function Leadership() {
               fontWeight="medium"
               px={{md:16,base:4}}
               py={2}
-              className="bg-[#0891B2] hover:bg-[#4BC0C8]"
+              className="bg-[#0891B2] hover:bg-[#4BC0C8] transition-all duration-200 ease-in-out"
             >
               Contact Us
             </Box>
