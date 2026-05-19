@@ -3,8 +3,8 @@
  * Apple iOS colors, proper English capitalization, hushh-blue accents.
  * Slides in from right, covers entire viewport.
  */
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import hushhLogo from "../images/Hushhogo.png";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
@@ -47,10 +47,12 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
   isOpen,
   onClose,
 }) => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { status, signOut } = useAuthSession();
   const isAuthenticated = status === "authenticated";
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   /* Lock body scroll when drawer is open */
   useEffect(() => {
@@ -69,6 +71,8 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
     navigate(path);
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   const handleLogout = async () => {
     onClose();
     await signOut();
@@ -78,7 +82,10 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-white flex flex-col selection:bg-hushh-blue selection:text-white">
+    <div
+      ref={drawerRef}
+      className="fixed inset-0 z-[100] bg-white flex flex-col selection:bg-hushh-blue selection:text-white"
+    >
       {/* ── Header ── */}
       <div className="px-6 py-6 flex justify-between items-center">
         <div className="flex items-center gap-4">
@@ -108,7 +115,9 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
             <button
               key={item.path}
               onClick={() => handleNavigate(item.path)}
-              className="group flex items-center gap-5 py-4 border-b border-gray-50 hover:bg-hushh-blue/5 transition-colors -mx-4 px-4 rounded-xl w-full text-left"
+              className={`group flex items-center gap-5 py-4 border-b border-gray-50 hover:bg-hushh-blue/5 transition-colors -mx-4 px-4 rounded-xl w-full text-left ${
+                isActive(item.path) ? "bg-hushh-blue/5" : ""
+              }`}
             >
               <div className="w-8 h-8 rounded-full bg-gray-50 group-hover:bg-hushh-blue/10 border border-transparent group-hover:border-hushh-blue/20 flex items-center justify-center transition-all">
                 <span className="material-symbols-outlined text-gray-400 group-hover:text-hushh-blue transition-colors !text-[1.1rem]">
@@ -149,7 +158,9 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
             <button
               key={item.path}
               onClick={() => handleNavigate(item.path)}
-              className="group flex items-center gap-5 py-4 border-b border-gray-50 hover:bg-hushh-blue/5 transition-colors -mx-4 px-4 rounded-xl w-full text-left"
+              className={`group flex items-center gap-5 py-4 border-b border-gray-50 hover:bg-hushh-blue/5 transition-colors -mx-4 px-4 rounded-xl w-full text-left ${
+                isActive(item.path) ? "bg-hushh-blue/5" : ""
+              }`}
             >
               <div className="w-8 h-8 rounded-full bg-gray-50 group-hover:bg-hushh-blue/10 border border-transparent group-hover:border-hushh-blue/20 flex items-center justify-center transition-all">
                 <span className="material-symbols-outlined text-gray-400 group-hover:text-hushh-blue transition-colors !text-[1.1rem]">
@@ -204,9 +215,14 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
               </button>
               <button
                 onClick={() => handleNavigate("/signup")}
-                className="text-left text-[0.85rem] font-medium text-gray-400 hover:text-hushh-blue transition-colors tracking-wide"
+                className="group flex items-center gap-3 text-left text-[0.85rem] font-medium text-gray-400 hover:text-hushh-blue transition-colors tracking-wide"
               >
-                {t("navDrawer.signUp")}
+                <span className="material-symbols-outlined text-gray-400 group-hover:text-hushh-blue transition-colors !text-[1rem]">
+                  person_add
+                </span>
+                <span className="text-[0.9rem] font-medium text-gray-900 tracking-wide group-hover:text-hushh-blue transition-colors">
+                  {t("navDrawer.signUp")}
+                </span>
               </button>
             </div>
           )}
