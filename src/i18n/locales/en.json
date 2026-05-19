@@ -15,6 +15,9 @@
     "kycStudio": "KYC Studio Alpha",
     "deleteAccount": "Delete Account"
   },
+  "navDrawer": {
+    "signUp": "Sign Up"
+  },
   "deleteAccount": {
     "title": "Delete Account",
     "warningMessage": "This action is permanent and cannot be undone. Your product data will be permanently deleted, and only a minimal de-identified payment audit may remain.",

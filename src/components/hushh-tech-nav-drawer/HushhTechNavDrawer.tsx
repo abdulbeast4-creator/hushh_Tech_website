@@ -5,6 +5,7 @@
  */
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import hushhLogo from "../images/Hushhogo.png";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
 
@@ -47,6 +48,7 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
   onClose,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { status, signOut } = useAuthSession();
   const isAuthenticated = status === "authenticated";
 
@@ -204,7 +206,7 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
                 onClick={() => handleNavigate("/signup")}
                 className="text-left text-[0.85rem] font-medium text-gray-400 hover:text-hushh-blue transition-colors tracking-wide"
               >
-                Sign Up
+                {t("navDrawer.signUp")}
               </button>
             </div>
           )}
