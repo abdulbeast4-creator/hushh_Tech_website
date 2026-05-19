@@ -124,9 +124,10 @@ export const IOSOnboardingShell: React.FC<IOSOnboardingShellProps> = ({
     const handleScroll = () => {
       setIsScrolled(container.scrollTop > 20);
     };
+    const scrollListenerOptions = { passive: true };
 
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, scrollListenerOptions);
+    return () => container.removeEventListener('scroll', handleScroll, scrollListenerOptions);
   }, []);
 
   /* Swipe-back gesture */
