@@ -31,7 +31,7 @@ import {
   FiLock,
   FiSearch,
 } from 'react-icons/fi';
-import type { A2AResultSummaryProps, A2AKycDecision, A2AExportResult } from '../../types/a2aPlayground';
+import type { A2AResultSummaryProps, A2AKycDecision } from '../../types/a2aPlayground';
 
 // Animations
 const fadeIn = keyframes`
