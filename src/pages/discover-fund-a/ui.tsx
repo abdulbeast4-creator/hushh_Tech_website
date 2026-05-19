@@ -50,9 +50,16 @@ const FeatureCard = ({
   description: string;
   iconColor?: string;
 }) => (
-  <div className="flex items-start gap-4 border border-gray-200 rounded-2xl p-5 hover:border-gray-300 hover:bg-gray-50/50 transition-all">
-    <div className="w-11 h-11 rounded-full border border-gray-200 flex items-center justify-center shrink-0 bg-white">
-      <span className={`material-symbols-outlined ${iconColor} !text-[1.15rem]`}>
+  <div
+    data-testid="feature-comparison-card"
+    className="group flex items-start gap-3 border border-gray-200 rounded-2xl p-4 hover:border-gray-300 hover:bg-gray-50/50 hover:shadow-sm transition-all sm:gap-4 sm:p-5"
+  >
+    <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center shrink-0 bg-white group-hover:border-gray-300 transition-colors sm:w-11 sm:h-11">
+      <span
+        aria-hidden="true"
+        data-testid="feature-card-icon"
+        className={`material-symbols-outlined ${iconColor} !text-[1.15rem] group-hover:scale-110 transition-transform`}
+      >
         {icon}
       </span>
     </div>
@@ -61,6 +68,42 @@ const FeatureCard = ({
         {title}
       </h3>
       <p className="text-[11px] text-gray-400 font-light leading-relaxed">
+        {description}
+      </p>
+    </div>
+  </div>
+);
+
+/* ── desktop highlight tile (same spirit as home advantage) ── */
+const FeatureHighlightTile = ({
+  icon,
+  title,
+  description,
+  iconColor = "text-gray-700",
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  iconColor?: string;
+}) => (
+  <div
+    data-testid="feature-comparison-tile"
+    className="group flex flex-col items-center text-center gap-3 border border-gray-200/70 rounded-2xl p-4 bg-white hover:border-gray-300 hover:bg-gray-50/40 hover:shadow-sm transition-all xl:p-5"
+  >
+    <div className="w-12 h-12 rounded-full border border-gray-200/70 flex items-center justify-center bg-gray-50 group-hover:bg-white group-hover:border-gray-300 transition-colors">
+      <span
+        aria-hidden="true"
+        data-testid="feature-card-icon"
+        className={`material-symbols-outlined ${iconColor} !text-[1.15rem] group-hover:scale-110 transition-transform`}
+      >
+        {icon}
+      </span>
+    </div>
+    <div>
+      <h3 className="text-[13px] font-semibold text-black leading-snug mb-1">
+        {title}
+      </h3>
+      <p className="text-[11px] text-gray-500 font-light leading-relaxed">
         {description}
       </p>
     </div>
@@ -120,6 +163,7 @@ const RISK_COLORS: Record<string, string> = {
 
 const FundA = () => {
   const navigate = useNavigate();
+  const [isAlphaBreakdownOpen, setIsAlphaBreakdownOpen] = React.useState(false);
   const {
     heroTitle,
     heroSubtitle,
@@ -150,6 +194,40 @@ const FundA = () => {
     joinButtonLabel,
     handleCompleteProfile,
   } = useDiscoverFundALogic();
+  const alphaBreakdownRows = alphaStackRows.filter((row) => !row.isTotalRow);
+  const targetNetIrrRow = alphaStackRows.find((row) => row.isTotalRow);
+
+  const ALPHA_PROGRESS_MAX = 23;
+
+  const getProgressMetrics = (
+    value: string
+  ): { width: number; min: number; max: number; now: number } => {
+    const rangeMatch = value.match(/(\d+)\s*-\s*(\d+)/);
+    if (rangeMatch) {
+      const rangeMin = Number(rangeMatch[1]);
+      const rangeMax = Number(rangeMatch[2]);
+      const midpoint = (rangeMin + rangeMax) / 2;
+      return {
+        width: Math.min((midpoint / ALPHA_PROGRESS_MAX) * 100, 100),
+        min: 0,
+        max: ALPHA_PROGRESS_MAX,
+        now: midpoint,
+      };
+    }
+
+    const singleMatch = value.match(/(\d+(\.\d+)?)/);
+    if (!singleMatch) {
+      return { width: 0, min: 0, max: ALPHA_PROGRESS_MAX, now: 0 };
+    }
+
+    const numericValue = Number(singleMatch[1]);
+    return {
+      width: Math.min((numericValue / ALPHA_PROGRESS_MAX) * 100, 100),
+      min: 0,
+      max: ALPHA_PROGRESS_MAX,
+      now: numericValue,
+    };
+  };
 
   return (
     <div className="bg-white text-gray-900 min-h-screen antialiased flex flex-col selection:bg-hushh-blue selection:text-white">
@@ -160,60 +238,72 @@ const FundA = () => {
       />
 
       {/* ═══ Main ═══ */}
-      <main className="px-6 flex-grow max-w-md mx-auto w-full pb-32">
-        {/* ── Hero ── */}
-        <section className="pt-6 pb-8">
-          {/* pill badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hushh-blue/20 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-hushh-blue rounded-full" />
-            <span className="text-[10px] tracking-[0.15em] uppercase font-medium text-hushh-blue">
-              Flagship Fund
-            </span>
+      <main className="px-6 flex-grow max-w-md mx-auto w-full pb-32 lg:max-w-7xl lg:px-10 xl:px-16">
+        <section className="pt-6 pb-8 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+          {/* ── Hero ── */}
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hushh-blue/20 rounded-full mb-6">
+              <span className="w-1.5 h-1.5 bg-hushh-blue rounded-full" />
+              <span className="text-[10px] tracking-[0.15em] uppercase font-medium text-hushh-blue">
+                Flagship Fund
+              </span>
+            </div>
+
+            <h1
+              className="text-[2.75rem] leading-[1.1] font-normal text-black tracking-tight lg:text-[3.25rem]"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              {heroTitle} <br />
+              <span className="text-gray-400 italic font-light">{heroSubtitle}</span>
+            </h1>
+
+            <p className="text-[13px] text-gray-400 font-light mt-4 leading-relaxed max-w-xs lg:max-w-md">
+              {heroDescription}
+            </p>
           </div>
 
-          <h1
-            className="text-[2.75rem] leading-[1.1] font-normal text-black tracking-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            {heroTitle} <br />
-            <span className="text-gray-400 italic font-light">{heroSubtitle}</span>
-          </h1>
-
-          <p className="text-[13px] text-gray-400 font-light mt-4 leading-relaxed max-w-xs">
-            {heroDescription}
-          </p>
-        </section>
-
-        {/* ── Target IRR (premium black card — like step-1 share class) ── */}
-        <section className="mb-8">
-          <div className="bg-ios-dark rounded-2xl p-6 text-center relative overflow-hidden">
-            {/* subtle glow */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-hushh-blue/15 rounded-full blur-2xl" />
-            <div className="relative z-10">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-3 font-medium">
-                {targetIRRLabel}
-              </p>
-              <p
-                className="text-[48px] leading-none font-medium text-ios-green mb-2"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                {targetIRRValue}
-              </p>
-              <p className="text-[13px] text-gray-400 mb-4">
-                {targetIRRPeriod}
-              </p>
-              <p className="text-[9px] text-gray-600 italic max-w-[220px] mx-auto leading-relaxed">
-                {targetIRRDisclaimer}
-              </p>
+          {/* ── Target IRR (premium black card) ── */}
+          <div className="mt-8 lg:mt-0">
+            <div className="group bg-ios-dark rounded-2xl p-6 text-center relative overflow-hidden transition-all duration-700 hover:-rotate-[5deg]">
+              <div className="absolute inset-0 bg-ios-gray-bg/90 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-hushh-blue/15 rounded-full blur-2xl" />
+              <div className="relative z-10">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-600 mb-3 font-medium transition-colors duration-700">
+                  {targetIRRLabel}
+                </p>
+                <p
+                  className="text-[48px] leading-none font-medium text-ios-green mb-2"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {targetIRRValue}
+                </p>
+                <p className="text-[13px] text-gray-400 group-hover:text-gray-600 mb-4 transition-colors duration-700">
+                  {targetIRRPeriod}
+                </p>
+                <p className="text-[9px] text-gray-600 italic max-w-[220px] mx-auto leading-relaxed">
+                  {targetIRRDisclaimer}
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* ── Investment Philosophy ── */}
         <SectionLabel>{philosophySectionTitle}</SectionLabel>
-        <div className="space-y-3 mb-2">
+        <div className="space-y-3 mb-2 lg:hidden">
           {philosophyCards.map((card) => (
             <FeatureCard
+              key={card.title}
+              icon={PHILOSOPHY_ICONS[card.title] || "lightbulb"}
+              iconColor={PHILOSOPHY_COLORS[card.title] || "text-hushh-blue"}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
+        </div>
+        <div className="hidden lg:grid lg:grid-cols-3 gap-4 mb-2">
+          {philosophyCards.map((card) => (
+            <FeatureHighlightTile
               key={card.title}
               icon={PHILOSOPHY_ICONS[card.title] || "lightbulb"}
               iconColor={PHILOSOPHY_COLORS[card.title] || "text-hushh-blue"}
@@ -236,9 +326,20 @@ const FundA = () => {
           </a>{" "}
           Framework
         </SectionLabel>
-        <div className="space-y-3 mb-2">
+        <div className="space-y-3 mb-2 lg:hidden">
           {edgeCards.map((card) => (
             <FeatureCard
+              key={card.title}
+              icon={EDGE_ICONS[card.title] || "auto_awesome"}
+              iconColor={EDGE_COLORS[card.title] || "text-hushh-blue"}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
+        </div>
+        <div className="hidden lg:grid lg:grid-cols-4 gap-4 mb-2">
+          {edgeCards.map((card) => (
+            <FeatureHighlightTile
               key={card.title}
               icon={EDGE_ICONS[card.title] || "auto_awesome"}
               iconColor={EDGE_COLORS[card.title] || "text-hushh-blue"}
@@ -253,9 +354,20 @@ const FundA = () => {
         <p className="text-[11px] text-gray-400 font-light leading-relaxed mb-4">
           {assetFocusDescription}
         </p>
-        <div className="space-y-3 mb-2">
+        <div className="space-y-3 mb-2 lg:hidden">
           {assetPillars.map((pillar) => (
             <FeatureCard
+              key={pillar.title}
+              icon={ASSET_ICONS[pillar.title] || "category"}
+              iconColor={ASSET_COLORS[pillar.title] || "text-hushh-blue"}
+              title={pillar.title}
+              description={pillar.description}
+            />
+          ))}
+        </div>
+        <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-2">
+          {assetPillars.map((pillar) => (
+            <FeatureHighlightTile
               key={pillar.title}
               icon={ASSET_ICONS[pillar.title] || "category"}
               iconColor={ASSET_COLORS[pillar.title] || "text-hushh-blue"}
@@ -270,18 +382,19 @@ const FundA = () => {
         <p className="text-[10px] text-gray-400 italic mb-1">
           {alphaStackSubtitle}
         </p>
-        <div className="mb-2">
+        <div className="mb-2 lg:hidden">
           {alphaStackRows.map((row) =>
             row.isTotalRow ? (
               <div
                 key={row.label}
-                className="flex items-center justify-between bg-ios-dark text-white rounded-2xl px-6 py-4 mt-3"
+                className="group relative overflow-hidden flex items-center justify-between bg-ios-dark text-white rounded-2xl px-6 py-4 mt-3 transition-colors duration-700"
               >
-                <span className="text-sm font-semibold">
+                <div className="absolute inset-0 bg-ios-gray-bg/90 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
+                <span className="relative z-10 text-sm font-semibold text-white group-hover:text-gray-700 transition-colors duration-700">
                   {row.label}
                 </span>
                 <span
-                  className="text-xl font-medium text-ios-green"
+                  className="relative z-10 text-xl font-medium text-ios-green"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
                   {row.value}
@@ -296,12 +409,106 @@ const FundA = () => {
             )
           )}
         </div>
+        <div className="hidden lg:block mb-2">
+          {targetNetIrrRow && (
+            <button
+              type="button"
+              onClick={() => setIsAlphaBreakdownOpen((prev) => !prev)}
+              aria-expanded={isAlphaBreakdownOpen}
+              aria-controls="alpha-breakdown-panel"
+              className="group relative overflow-hidden w-full text-left flex items-center justify-between bg-ios-dark text-white rounded-2xl px-6 py-4 transition-colors duration-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-hushh-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              <div className="absolute inset-0 bg-ios-gray-bg/90 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
+              <span className="relative z-10 text-sm font-semibold text-white group-hover:text-gray-700 transition-colors duration-700">
+                {targetNetIrrRow.label}
+              </span>
+              <div className="relative z-10 flex items-center gap-3">
+                <span
+                  className="text-xl font-medium text-ios-green"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {targetNetIrrRow.value}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="material-symbols-outlined !text-[1.15rem] text-hushh-blue"
+                >
+                  {isAlphaBreakdownOpen ? "expand_less" : "expand_more"}
+                </span>
+              </div>
+            </button>
+          )}
+
+          {isAlphaBreakdownOpen && (
+            <div
+              id="alpha-breakdown-panel"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+            >
+              {alphaBreakdownRows.map((row) => {
+                const progress = getProgressMetrics(row.value);
+                const labelId = `alpha-breakdown-${row.label.replace(/\s+/g, "-").toLowerCase()}-label`;
+
+                return (
+                <div
+                  key={row.label}
+                  className="group border border-gray-200 rounded-2xl p-4 bg-gradient-to-b from-white to-gray-50/60 hover:border-hushh-blue/25 transition-all"
+                >
+                  <p
+                    id={labelId}
+                    className="text-[11px] font-medium text-black leading-snug mb-3 min-h-[34px]"
+                  >
+                    {row.label}
+                  </p>
+                  <div
+                    role="progressbar"
+                    aria-labelledby={labelId}
+                    aria-valuemin={progress.min}
+                    aria-valuemax={progress.max}
+                    aria-valuenow={progress.now}
+                    aria-valuetext={row.value}
+                    className="w-full h-2.5 rounded-full bg-gray-200/80 overflow-hidden mb-2 shadow-inner"
+                  >
+                    <div
+                      className="relative h-full rounded-full bg-gradient-to-r from-hushh-blue to-hushh-blue/70 transition-all duration-700"
+                      style={{ width: `${progress.width}%` }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 opacity-60 bg-[linear-gradient(110deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.55)_45%,rgba(255,255,255,0)_70%)] animate-[pulse_2.4s_ease-in-out_infinite]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
+                      Annual Range
+                    </p>
+                    <p className="text-[12px] font-semibold text-hushh-blue group-hover:text-ios-dark transition-colors">
+                      {row.value}
+                    </p>
+                  </div>
+                </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {/* ── Risk Management ── */}
         <SectionLabel>{riskSectionTitle}</SectionLabel>
-        <div className="space-y-3 mb-2">
+        <div className="space-y-3 mb-2 lg:hidden">
           {riskCards.map((card) => (
             <FeatureCard
+              key={card.title}
+              icon={RISK_ICONS[card.title] || "security"}
+              iconColor={RISK_COLORS[card.title] || "text-ios-green"}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
+        </div>
+        <div className="hidden lg:grid lg:grid-cols-2 gap-4 mb-2">
+          {riskCards.map((card) => (
+            <FeatureHighlightTile
               key={card.title}
               icon={RISK_ICONS[card.title] || "security"}
               iconColor={RISK_COLORS[card.title] || "text-ios-green"}
@@ -330,13 +537,17 @@ const FundA = () => {
 
         {/* Share Classes (compact cards) */}
         <SectionLabel>Share Classes</SectionLabel>
-        <div className="space-y-3 mb-4">
+        <div className="space-y-3 mb-4 lg:grid lg:grid-cols-3 lg:gap-4 lg:space-y-0">
           {shareClasses.map((sc) => (
             <div
               key={sc.shareClass}
-              className="border border-gray-200 rounded-2xl p-5 hover:border-gray-300 transition-colors"
+              data-testid="share-class-pricing-card"
+              className="border border-gray-200 rounded-2xl p-5 hover:border-gray-300 hover:bg-gray-50/40 hover:shadow-sm transition-all"
             >
-              <div className="flex items-center justify-between mb-3">
+              <div
+                data-testid="share-class-pricing-header"
+                className="flex flex-col items-start gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:mb-3"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full bg-ios-dark flex items-center justify-center">
                     <span className="material-symbols-outlined text-white !text-[0.9rem]">
@@ -347,32 +558,35 @@ const FundA = () => {
                     {sc.shareClass}
                   </span>
                 </div>
-                <span className="text-[11px] font-medium text-hushh-blue bg-hushh-blue/10 px-2.5 py-1 rounded-full">
+                <span className="inline-flex max-w-full text-[11px] font-medium text-hushh-blue bg-hushh-blue/10 px-2.5 py-1 rounded-full">
                   Min {sc.minInvestment}
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="text-center">
+              <div
+                data-testid="share-class-pricing-metrics"
+                className="grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <div className="text-center rounded-xl border border-gray-200 bg-white px-2 py-2 transition-all hover:border-hushh-blue/40 hover:bg-hushh-blue/5">
                   <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
                     Mgmt
                   </p>
-                  <p className="text-[12px] font-semibold text-black">
+                  <p className="text-[12px] font-semibold text-black transition-colors hover:text-hushh-blue">
                     {sc.managementFee}
                   </p>
                 </div>
-                <div className="text-center">
+                <div className="text-center rounded-xl border border-gray-200 bg-white px-2 py-2 transition-all hover:border-ios-green/40 hover:bg-ios-green/5">
                   <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
                     Perf
                   </p>
-                  <p className="text-[12px] font-semibold text-black">
+                  <p className="text-[12px] font-semibold text-black transition-colors hover:text-ios-green">
                     {sc.performanceFee}
                   </p>
                 </div>
-                <div className="text-center">
+                <div className="text-center rounded-xl border border-gray-200 bg-white px-2 py-2 transition-all hover:border-ios-yellow/50 hover:bg-ios-yellow/10">
                   <p className="text-[9px] uppercase tracking-widest text-gray-400 mb-0.5">
                     Hurdle
                   </p>
-                  <p className="text-[12px] font-semibold text-black">
+                  <p className="text-[12px] font-semibold text-black transition-colors hover:text-ios-yellow">
                     {sc.hurdleRate}
                   </p>
                 </div>
@@ -404,22 +618,26 @@ const FundA = () => {
             {joinSectionDescription}
           </p>
 
-          <div className="space-y-3">
-            <HushhTechCta
-              variant={HushhTechCtaVariant.BLACK}
-              onClick={handleCompleteProfile}
-            >
-              {joinButtonLabel}
-              <span className="material-symbols-outlined !text-[1.1rem]">
-                arrow_forward
-              </span>
-            </HushhTechCta>
-            <HushhTechCta
-              variant={HushhTechCtaVariant.WHITE}
-              onClick={() => navigate("/")}
-            >
-              Back to Home
-            </HushhTechCta>
+          <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-3">
+            <div className="lg:w-1/2">
+              <HushhTechCta
+                variant={HushhTechCtaVariant.BLACK}
+                onClick={handleCompleteProfile}
+              >
+                {joinButtonLabel}
+                <span className="material-symbols-outlined !text-[1.1rem]">
+                  arrow_forward
+                </span>
+              </HushhTechCta>
+            </div>
+            <div className="lg:w-1/2">
+              <HushhTechCta
+                variant={HushhTechCtaVariant.WHITE}
+                onClick={() => navigate("/")}
+              >
+                Back to Home
+              </HushhTechCta>
+            </div>
           </div>
         </section>
 
@@ -435,7 +653,9 @@ const FundA = () => {
       </main>
 
       {/* ═══ Footer Nav ═══ */}
-      <HushhTechFooter activeTab={HushhFooterTab.FUND_A} />
+      <div className="lg:hidden">
+        <HushhTechFooter activeTab={HushhFooterTab.FUND_A} />
+      </div>
     </div>
   );
 };
