@@ -123,6 +123,81 @@
     "subtitle": "Alpha 27 Cash Flow Monarchy",
     "description": "A revolutionary investment approach combining AI-driven analysis with fundamental value investing"
   },
+  "dataTracker": {
+    "eyebrow": "Phase 2 data tracker",
+    "title": "User data control room",
+    "description": "Monitor consented data signals, inspect confidence levels, and preview zero-knowledge masking before anything leaves the user's vault.",
+    "confidence": "Confidence",
+    "confidenceValue": "{{value}}%",
+    "actions": {
+      "reveal": "Reveal sample",
+      "mask": "Mask sample",
+      "revealAria": "Reveal tracked data sample values",
+      "maskAria": "Mask tracked data sample values"
+    },
+    "signals": {
+      "identity": {
+        "label": "Verified identity",
+        "source": "Identity graph",
+        "value": "Aarav M.",
+        "maskedValue": "A*** M."
+      },
+      "finance": {
+        "label": "Monthly cash flow",
+        "source": "Financial link",
+        "value": "$4,820",
+        "maskedValue": "$*,***"
+      },
+      "location": {
+        "label": "Primary city",
+        "source": "Location consent",
+        "value": "Seattle, WA",
+        "maskedValue": "S******, WA"
+      },
+      "preferences": {
+        "label": "Preference signal",
+        "source": "AI inference",
+        "value": "Low-risk investing",
+        "maskedValue": "L**-**** investing"
+      }
+    },
+    "zeroKnowledge": {
+      "eyebrow": "Zero-knowledge preview",
+      "preview": "Rendered value",
+      "maskedNote": "Sensitive values remain masked while the dashboard can still validate structure, source, and confidence.",
+      "revealedNote": "Sample values are visible locally for operator review and should be masked before external sharing."
+    },
+    "summary": {
+      "encrypted": "Encryption",
+      "encryptedValue": "Vault sealed",
+      "consent": "Consent",
+      "consentValue": "User approved",
+      "mode": "View mode",
+      "modeMasked": "Masked",
+      "modeVisible": "Visible"
+    },
+    "timeline": {
+      "eyebrow": "Privacy activity",
+      "title": "Recent tracking events"
+    },
+    "events": {
+      "sync": {
+        "title": "Signal refresh completed",
+        "description": "The tracker reconciled user-approved sources without expanding the consent scope.",
+        "time": "2m ago"
+      },
+      "mask": {
+        "title": "Masking policy applied",
+        "description": "Personal identifiers were transformed into display-safe values for dashboard review.",
+        "time": "8m ago"
+      },
+      "consent": {
+        "title": "Consent receipt verified",
+        "description": "The active data view is backed by a current user permission record.",
+        "time": "14m ago"
+      }
+    }
+  },
   "marquee": {
     "prefix": "Introducing the hushh 27 alpha bets —"
   }
