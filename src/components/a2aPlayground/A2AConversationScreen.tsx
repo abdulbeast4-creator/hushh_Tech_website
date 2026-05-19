@@ -242,12 +242,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ type, name, subtitle, isActive })
           <img 
             src="/assets/Hushhogo-tDRfOnun.png" 
             alt="Hushh Logo" 
-            style={{ 
-              height: '24px', 
-              width: 'auto', 
-              margin: '0 auto',
-              display: 'block'
-            }} 
+            className="mx-auto h-6 w-6 object-contain"
           />
         </Box>
       )}
