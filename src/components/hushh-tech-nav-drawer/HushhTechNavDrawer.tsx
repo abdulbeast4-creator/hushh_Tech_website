@@ -10,6 +10,7 @@ import hushhLogo from "../images/Hushhogo.png";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
 import { useModalKeyboardNavigation } from "../../hooks/useModalKeyboardNavigation";
 import { moveFocusWithin } from "../../utils/keyboardNavigation";
+import enTranslation from "../../i18n/locales/en.json";
 
 interface NavItem {
   icon: string;
@@ -56,6 +57,9 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
   const isAuthenticated = status === "authenticated";
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const signUpLabel = t("navDrawer.signUp", {
+    defaultValue: enTranslation.navDrawer.signUp,
+  });
 
   useModalKeyboardNavigation({
     isOpen,
@@ -256,7 +260,7 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
                   person_add
                 </span>
                 <span className="text-[0.9rem] font-medium text-gray-900 tracking-wide group-hover:text-hushh-blue transition-colors">
-                  {t("navDrawer.signUp")}
+                  {signUpLabel}
                 </span>
               </button>
             </div>
