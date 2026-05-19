@@ -17,28 +17,29 @@ interface LanguageSwitcherProps {
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }) => {
   const { i18n } = useTranslation();
-  const [isOpen, setIsOpen]       = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);  // keyboard focus index
-  const [mounted, setMounted]     = useState(false);   // SSR hydration guard
-  const dropdownRef  = useRef<HTMLDivElement>(null);
-  const triggerRef   = useRef<HTMLButtonElement>(null);
-  const optionRefs   = useRef<Array<HTMLButtonElement | null>>([]);
-  const menuId       = 'language-switcher-menu';
+  const [isOpen, setIsOpen]           = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [mounted, setMounted]         = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef  = useRef<HTMLButtonElement>(null);
+  const optionRefs  = useRef<Array<HTMLButtonElement | null>>([]);
+  const menuId      = 'language-switcher-menu';
 
-  // ── SSR guard: only touch the DOM after the component has mounted ──────────
+  // Safely extract base language code (handles region codes like 'en-US', 'zh-CN')
+  const baseLangCode   = ((i18n.language || 'en').split('-')[0]) as LocaleCode;
+  const currentLangObj = languages.find(l => l.code === baseLangCode) ?? languages[0];
+  const currentLang    = currentLangObj.shortCode;
+  const currentLangIndex = Math.max(languages.findIndex(l => l.code === baseLangCode), 0);
+
+  // SSR guard — only touch the DOM after mount to prevent hydration mismatch
   useEffect(() => { setMounted(true); }, []);
 
-  // ── Reactively sync document dir + lang (SSR-safe) ──────────────────────
+  // Reactively sync document dir + lang, client-side only
   useEffect(() => {
     if (!mounted) return;
-    const lang = i18n.language as LocaleCode;
-    document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-  }, [i18n.language, mounted]);
-
-  // ── startsWith so en-US matches en, zh-CN matches zh, etc. ───────────────
-  const currentLang      = languages.find(l => i18n.language.startsWith(l.code))?.shortCode ?? 'EN';
-  const currentLangIndex = Math.max(languages.findIndex(l => i18n.language.startsWith(l.code)), 0);
+    document.documentElement.dir  = baseLangCode === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = baseLangCode;
+  }, [baseLangCode, mounted]);
 
   const closeDropdown = useCallback((returnFocus = false) => {
     setIsOpen(false);
@@ -46,7 +47,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
     if (returnFocus) triggerRef.current?.focus();
   }, []);
 
-  // ── Close on outside click ────────────────────────────────────────────────
+  // Close on outside click
   useEffect(() => {
     const onMouseDown = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -57,13 +58,13 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
     return () => document.removeEventListener('mousedown', onMouseDown);
   }, [closeDropdown]);
 
-  // ── Focus the active option whenever it changes ───────────────────────────
+  // Focus the active option whenever it changes
   useEffect(() => {
     if (!isOpen || activeIndex < 0) return;
     optionRefs.current[activeIndex]?.focus();
   }, [activeIndex, isOpen]);
 
-  // ── Escape key from anywhere inside the dropdown ──────────────────────────
+  // Escape key from anywhere inside the dropdown
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
@@ -123,13 +124,14 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls={isOpen ? menuId : undefined}
+        title={`Change language (${currentLangObj.name})`}
       >
         <FiGlobe className={`w-3.5 h-3.5 ${isDark ? 'text-gray-400' : 'text-gray-600 dark:text-gray-400'}`} />
         <span className={`text-xs font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700 dark:text-gray-300'}`}>
           {currentLang}
         </span>
         <FiChevronDown
-          className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''} ${isDark ? 'text-gray-500' : 'text-gray-500'}`}
+          className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''} ${isDark ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}
         />
       </button>
 
@@ -139,10 +141,10 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
           id={menuId}
           role="listbox"
           aria-label="Language options"
-          className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[200]"
+          className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-[200]"
         >
           {languages.map((lang, index) => {
-            const isSelected = i18n.language.startsWith(lang.code);
+            const isSelected = baseLangCode === lang.code;
             return (
               <li key={lang.code} role="option" aria-selected={isSelected}>
                 <button
@@ -150,10 +152,10 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
                   type="button"
                   onClick={() => handleSelect(lang.code)}
                   onKeyDown={e => handleOptionKeyDown(e, index, lang.code)}
-                  className={`w-full flex items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${
+                  className={`w-full flex items-center justify-between px-4 py-2.5 text-left text-sm transition-colors focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 ${
                     isSelected
-                      ? 'bg-[#135bec]/5 text-[#135bec] font-semibold'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-[#135bec]/5 text-[#135bec] font-semibold dark:bg-[#135bec]/20 dark:text-[#5b8ef2]'
+                      : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
                   }`}
                 >
                   <span>{lang.name}</span>
